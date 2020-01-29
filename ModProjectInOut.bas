@@ -53,7 +53,7 @@ Public Sub ExportModules()
     Next VBModule
     
     Application.DisplayAlerts = False
-    ThisWorkbook.SaveAs EXPORT_FILE_PATH & "\" & PROJECT_FILE_NAME, 51
+    ThisWorkbook.SaveAs EXPORT_FILE_PATH & PROJECT_FILE_NAME, 51
     Application.DisplayAlerts = True
     
     MsgBox "Export is ready", vbInformation, APP_NAME
