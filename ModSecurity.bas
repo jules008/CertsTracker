@@ -1,9 +1,8 @@
 Attribute VB_Name = "ModSecurity"
 
 Public Sub BasicView()
-    ShtDashboard.Protect "2683174"
-    ShtMain.Protect "2683174"
-    
+    ShtMain.Unprotect "2683174"
+    ShtMain.Range("A:H").Locked = True
     ShtReport.Visible = xlSheetVeryHidden
     ShtColours.Visible = xlSheetVeryHidden
     ShtCourseDates.Visible = xlSheetVeryHidden
@@ -13,42 +12,48 @@ Public Sub BasicView()
     ShtMain.BtnImpExp.Visible = False
     
     ShtMain.Shapes("TxtView").Visible = msoFalse
+    ShtDashboard.Protect "2683174"
+    ShtMain.Protect "2683174"
+    
+    USER_LEVEL = BasicLvl
 End Sub
 
 Public Sub AdminView()
+    ShtDashboard.Protect "2683174"
+    ShtMain.Unprotect "2683174"
+    ShtMain.Range("A:G").Locked = False
     ShtReport.Visible = xlSheetVeryHidden
     ShtColours.Visible = xlSheetVeryHidden
     ShtCourseDates.Visible = xlSheetVeryHidden
     ShtLists.Visible = xlSheetHidden
     ShtRoleLU.Visible = xlSheetHidden
     
-    ShtMain.Unprotect "2683174"
-    
     ShtMain.Shapes("TxtView").Visible = msoCTrue
     ShtMain.Shapes("TxtView").TextFrame.Characters.Text = "Administrator View"
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = False
-    
-    ShtDashboard.Protect "2683174"
     ShtMain.Protect "2683174"
+    
+    USER_LEVEL = AdminLvl
 End Sub
 
 Public Sub DevView()
+    ShtMain.Unprotect "2683174"
+    ShtDashboard.Unprotect "2683174"
+    ShtMain.Range("A:G").Locked = False
     ShtReport.Visible = xlSheetVisible
     ShtColours.Visible = xlSheetVisible
     ShtCourseDates.Visible = xlSheetVisible
     ShtLists.Visible = xlSheetVisible
     ShtRoleLU.Visible = xlSheetVisible
     
-    ShtMain.Unprotect "2683174"
     
     ShtMain.Shapes("TxtView").Visible = msoTrue
     ShtMain.Shapes("TxtView").TextFrame.Characters.Text = "Developer View"
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = True
     
-    ShtDashboard.Unprotect "2683174"
-    ShtMain.Unprotect "2683174"
+    USER_LEVEL = DevLvl
 End Sub
 
 

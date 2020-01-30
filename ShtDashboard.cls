@@ -31,6 +31,8 @@ Private Sub UpdateTrend()
     SheetMonth = [Sheet_month]
     CurrMonth = [Curr_Month]
     
+    ShtDashboard.Unprotect "2683174"
+    
     If SheetMonth <> CurrMonth Then MonthChange = True
     
     If MonthChange Then
@@ -44,6 +46,8 @@ Private Sub UpdateTrend()
     End If
     
     [Sheet_month] = CurrMonth
+    
+    ShtDashboard.Protect "2683174"
     
     Set RngTopRow = Nothing
     Set RngQIP = Nothing
@@ -61,6 +65,7 @@ ErrorHandler:
     Set RngPerc = Nothing
     Set RngNotQIP = Nothing
 
+    ShtDashboard.Protect "2683174"
 
 End Sub
 

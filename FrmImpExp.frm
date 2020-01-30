@@ -21,3 +21,6 @@ Private Sub BtnExport_Click()
     ModDataImpExp.ExportData
 End Sub
 
+Private Sub BtnImport_Click()
+    ModDataImpExp.ImportData
+End Sub

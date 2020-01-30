@@ -87,6 +87,6 @@ Public Function GetAllData() As Variant()
 End Function
 
 Public Sub ClearAllData()
-    Range("B3:AN" & ShtMain.GetCrewCountAll + 3).ClearContents
+    Range("B3:AN1000").ClearContents
 End Sub
 

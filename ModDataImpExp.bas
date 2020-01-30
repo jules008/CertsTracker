@@ -107,8 +107,130 @@ ErrorHandler:
 End Sub
 
 Private Sub ClearAllData()
+    ShtMain.Unprotect "2683174"
+    
     ShtMain.AutoFilterMode = False
     ShtMain.CmdShowHide.Caption = "Hide Leavers"
     ShtMain.ClearPersDetails
     ShtCourseDates.ClearAllData
+    
+    ShtMain.Protect "2683174"
+
 End Sub
+
+Public Sub ImportData()
+    Dim Fldr As FileDialog
+    Dim FilePath As String
+    Dim ErrFlag1 As Boolean
+    Dim ErrFlag2 As Boolean
+    
+    On Error GoTo ErrorHandler
+    
+    Set Fldr = Application.FileDialog(msoFileDialogFolderPicker)
+    
+    With Fldr
+        .Title = "Select Input Files Location"
+        .AllowMultiSelect = False
+        .InitialFileName = Application.DefaultFilePath
+        If .Show <> -1 Then Exit Sub
+        FilePath = .SelectedItems(1)
+    End With
+    
+    ErrFlag1 = ImportPersData(FilePath)
+    ErrFlag2 = ImportCourseDates(FilePath)
+    
+    If ErrFlag1 Or ErrFlag2 Then GoTo ErrorHandler
+    
+    MsgBox "Export Complete", vbOKOnly + vbInformation, "Data Export"
+    
+    Set Fldr = Nothing
+
+Exit Sub
+
+ErrorHandler:
+    Set Fldr = Nothing
+    
+        MsgBox "An error with the export has occured", vbOKOnly + vbCritical, "Error"
+
+End Sub
+
+Private Function ImportPersData(FilePath) As Boolean
+    Dim AryImport() As String
+    Dim FullFilePath As String
+    Dim TotalLines As Integer
+    
+    On Error GoTo ErrorHandler
+    
+    FullFilePath = FilePath & "UserDetails.txt"
+    
+    AryImport = DelimitedTextFileToArray(FullFilePath)
+    TotalLines = UBound(AryImport)
+    
+    ShtMain.Range("A4:G" & TotalLines + 3) = AryImport
+    
+    ImportPersData = False
+Exit Function
+
+ErrorHandler:
+    ImportPersData = True
+End Function
+
+Private Function DelimitedTextFileToArray(FilePath As String) As String()
+    Dim Delimiter As String
+    Dim TextFile As Integer
+    Dim FileContent As String
+    Dim LineArray() As String
+    Dim DataArray() As String
+    Dim TempArray() As String
+    Dim Rows As Integer
+    Dim rw As Long, col As Long
+    
+    Delimiter = ";"
+    rw = 0
+    
+    TextFile = FreeFile
+    Open FilePath For Input As TextFile
+    
+    FileContent = Input(LOF(TextFile), TextFile)
+    
+    Close TextFile
+    
+    LineArray() = Split(FileContent, vbCrLf)
+    Rows = UBound(LineArray)
+    ReDim DataArray(Rows, 39)
+    
+    For x = LBound(LineArray) To UBound(LineArray)
+        If Len(Trim(LineArray(x))) <> 0 Then
+            TempArray = Split(LineArray(x), Delimiter)
+            
+            For y = LBound(TempArray) To UBound(TempArray)
+                DataArray(rw, y) = TempArray(y)
+            Next y
+        End If
+    
+        rw = rw + 1
+    Next x
+    DelimitedTextFileToArray = DataArray()
+End Function
+
+Private Function ImportCourseDates(FilePath) As Boolean
+    Dim AryImport() As String
+    Dim FullFilePath As String
+    Dim TotalLines As Integer
+    
+    On Error GoTo ErrorHandler
+    
+    FullFilePath = FilePath & "CourseDates.txt"
+    
+    AryImport = DelimitedTextFileToArray(FullFilePath)
+    TotalLines = UBound(AryImport)
+    
+    ShtCourseDates.Range("B1:AN" & TotalLines + 3) = AryImport
+    
+    ImportCourseDates = False
+Exit Function
+
+ErrorHandler:
+    ImportCourseDates = True
+End Function
+
