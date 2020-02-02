@@ -47,7 +47,7 @@ Private Sub UpdateTrend()
     
     [Sheet_month] = CurrMonth
     
-    ShtDashboard.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect "2683174"
     
     Set RngTopRow = Nothing
     Set RngQIP = Nothing
@@ -65,7 +65,7 @@ ErrorHandler:
     Set RngPerc = Nothing
     Set RngNotQIP = Nothing
 
-    ShtDashboard.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect "2683174"
 
 End Sub
 

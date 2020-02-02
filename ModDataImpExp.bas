@@ -114,7 +114,7 @@ Private Sub ClearAllData()
     ShtMain.ClearPersDetails
     ShtCourseDates.ClearAllData
     
-    ShtMain.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then ShtMain.Protect "2683174"
 
 End Sub
 

@@ -142,6 +142,17 @@ Private Function GetQual(ColNo As Integer) As EnumQual
 
 End Function
 
+Private Sub BtnAddNew_Click()
+    PerfSettingsOn
+    Unprotect "2683174"
+    Range("G" & Me.GetCrewCountAll + 4) = "Active"
+    Range("G" & Me.GetCrewCountAll + 4).Select
+    ShowHide
+    ShowHide
+    Protect "2683174"
+    PerfSettingsOff
+End Sub
+
 Private Sub BtnEnterDate_Click()
     Dim SSN As String
     
@@ -250,7 +261,7 @@ Public Sub SortBy(Field As Integer)
 
     RngSort.Sort RngIndex.Offset(0, Field)
     
-    Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
     
     Set RngSort = Nothing
     Set RngIndex = Nothing
@@ -259,7 +270,7 @@ Public Sub SortBy(Field As Integer)
     
 ErrorHandler:
 
-    Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
     
     Set RngSort = Nothing
     Set RngIndex = Nothing
@@ -283,7 +294,7 @@ Private Sub ShowHide()
         CmdShowHide.Caption = "Hide Leavers"
     End If
     
-    Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
     
     Set RngShowHide = Nothing
     
@@ -291,7 +302,7 @@ Private Sub ShowHide()
     
 ErrorHandler:
 
-    Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
     
     Set RngShowHide = Nothing
 End Sub
