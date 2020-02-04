@@ -7,6 +7,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+'===============================================================
+' Module ShtCourseDates
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 04 Feb 20
+'===============================================================
+Option Explicit
 
 Public Function LookUpCourseDate(SSN As String, Qual As EnumQual, ReadWrite As EnumRW, Optional CourseDate As String) As String
     Dim QualNeeded As Boolean

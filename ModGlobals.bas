@@ -1,4 +1,13 @@
 Attribute VB_Name = "ModGlobals"
+'===============================================================
+' Module ModGlobals
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 04 Feb 20
+'===============================================================
+Option Explicit
+
 Public Const RNG_SSN As String = "B2:B500"
 Public Const RNG_EMT As String = "AK:AK"
 Public Const RNG_CREW_COUNT As String = "A:A"

@@ -7,6 +7,15 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+'===============================================================
+' Module ShtReport
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 04 Feb 20
+'===============================================================
+Option Explicit
+
 Public Sub PrintReport(ByRef AryReport As Variant, Title As String, Headings() As String)
     Dim i As Integer
     Range("A:E").ClearContents

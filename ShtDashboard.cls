@@ -7,6 +7,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+'===============================================================
+' Module ShtDashboard
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 04 Feb 20
+'===============================================================
+Option Explicit
 
 Private Sub UpdateTrend()
     Dim CurrMonth As Integer
@@ -15,6 +23,7 @@ Private Sub UpdateTrend()
     Dim RngTopRow As Range
     Dim RngQIP As Range
     Dim RngNotQIP As Range
+    Dim RngBottomRow As Range
     Dim ChartTrend As Chart
     Dim RngTotal As Range
     Dim RngPerc As Range
@@ -59,7 +68,7 @@ Exit Sub
 
 ErrorHandler:
     
-    Set RngBottomRow = Nothing
+    Set RngTopRow = Nothing
     Set RngQIP = Nothing
     Set RngTotal = Nothing
     Set RngPerc = Nothing

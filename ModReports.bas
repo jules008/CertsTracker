@@ -1,4 +1,12 @@
 Attribute VB_Name = "ModReports"
+'===============================================================
+' Module ModReports
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 04 Feb 20
+'===============================================================
+Option Explicit
 
 Public Sub PromReports(Report As EnumReport)
     Dim AryQuals() As Variant

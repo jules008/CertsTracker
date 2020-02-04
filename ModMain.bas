@@ -1,4 +1,12 @@
 Attribute VB_Name = "ModMain"
+'===============================================================
+' Module ModMain
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 04 Feb 20
+'===============================================================
+Option Explicit
 
 Public Function NoRows() As Integer
     NoRows = Application.WorksheetFunction.CountA(ShtMain.Range(RNG_CREW_COUNT)) - 1

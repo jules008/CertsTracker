@@ -130,6 +130,7 @@ Function DelimitedTextFileToArray(FilePath As String) As String()
     Dim TempArray() As String
     Dim rw As Long, col As Long
     Dim x As Integer
+    Dim y As Integer
     
     'Inputs
     Delimiter = ";"

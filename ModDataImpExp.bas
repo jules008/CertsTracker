@@ -1,8 +1,16 @@
 Attribute VB_Name = "ModDataImpExp"
+'===============================================================
+' Module ModDataImpExp
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 04 Feb 20
+'===============================================================
+
 Private Function ExportPersDet(FilePath As String) As Boolean
     Dim AryPersDet() As Variant
     Dim CrewCount As Integer
-    Dim Rw As Integer
+    Dim rw As Integer
     Dim Cl As Integer
     Dim TxtLine As String
     
@@ -14,10 +22,10 @@ Private Function ExportPersDet(FilePath As String) As Boolean
     
     AryPersDet = ShtMain.GetPersDetails
     
-    For Rw = LBound(AryPersDet) To UBound(AryPersDet)
+    For rw = LBound(AryPersDet) To UBound(AryPersDet)
         TxtLine = ""
         For Cl = 1 To 7
-            TxtLine = TxtLine & AryPersDet(Rw, Cl) & ";"
+            TxtLine = TxtLine & AryPersDet(rw, Cl) & ";"
         Next
         ExpFile.WriteLine (TxtLine)
     Next
@@ -38,7 +46,7 @@ End Function
 Private Function ExportCourseDates(FilePath As String) As Boolean
     Dim AryDates() As Variant
     Dim CrewCount As Integer
-    Dim Rw As Integer
+    Dim rw As Integer
     Dim Cl As Integer
     Dim TxtLine As String
     
@@ -49,10 +57,10 @@ Private Function ExportCourseDates(FilePath As String) As Boolean
     Set FSO = CreateObject("Scripting.FileSystemObject")
     Set ExpFile = FSO.CreateTextFile(FilePath & "\CourseDates.txt", True)
     
-    For Rw = LBound(AryDates) To UBound(AryDates)
+    For rw = LBound(AryDates) To UBound(AryDates)
         TxtLine = ""
         For Cl = 1 To 38
-            TxtLine = TxtLine & AryDates(Rw, Cl) & ";"
+            TxtLine = TxtLine & AryDates(rw, Cl) & ";"
         Next
         ExpFile.WriteLine (TxtLine)
     Next
@@ -106,7 +114,7 @@ ErrorHandler:
 
 End Sub
 
-Private Sub ClearAllData()
+Public Sub ClearAllData()
     ShtMain.Unprotect "2683174"
     
     ShtMain.AutoFilterMode = False
@@ -141,7 +149,7 @@ Public Sub ImportData()
     
     If ErrFlag1 Or ErrFlag2 Then GoTo ErrorHandler
     
-    MsgBox "Export Complete", vbOKOnly + vbInformation, "Data Export"
+    MsgBox "Import Complete", vbOKOnly + vbInformation, "Data Export"
     
     Set Fldr = Nothing
 
@@ -161,7 +169,7 @@ Private Function ImportPersData(FilePath) As Boolean
     
     On Error GoTo ErrorHandler
     
-    FullFilePath = FilePath & "UserDetails.txt"
+    FullFilePath = FilePath & "\UserDetails.txt"
     
     AryImport = DelimitedTextFileToArray(FullFilePath)
     TotalLines = UBound(AryImport)
@@ -220,7 +228,7 @@ Private Function ImportCourseDates(FilePath) As Boolean
     
     On Error GoTo ErrorHandler
     
-    FullFilePath = FilePath & "CourseDates.txt"
+    FullFilePath = FilePath & "\CourseDates.txt"
     
     AryImport = DelimitedTextFileToArray(FullFilePath)
     TotalLines = UBound(AryImport)
