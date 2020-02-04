@@ -16,8 +16,13 @@ Public Sub PrintReport(ByRef AryReport As Variant, Title As String, Headings() A
         Range("A2").Offset(0, i) = Headings(i)
     Next
     
+    PerfSettingsOn
+    ShtReport.Visible = xlSheetVisible
+    
     Range("A3:E50") = AryReport
     Me.ExportAsFixedFormat xlTypePDF, "CDC Report.PDF", openafterpublish:=True
-
+    
+    ShtReport.Visible = xlSheetVeryHidden
+    PerfSettingsOff
 End Sub
 

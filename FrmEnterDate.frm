@@ -22,6 +22,9 @@ Public Sub ShowForm(LocSSN As String, LocQual As EnumQual)
     SSN = LocSSN
     Qual = LocQual
     
+    LblName = "Name: " & ShtMain.GetName(SSN)
+    LblQual = "Qual: " & QualConvEnum(Qual)
+
     TxtDate = Format(Now, "dd mmm yy")
     Show
 End Sub
@@ -53,4 +56,3 @@ Private Sub BtnOK_Click()
     
     Unload Me
 End Sub
-
