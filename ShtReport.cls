@@ -29,7 +29,7 @@ Public Sub PrintReport(ByRef AryReport As Variant, Title As String, Headings() A
     ShtReport.Visible = xlSheetVisible
     
     Range("A3:E50") = AryReport
-    Me.ExportAsFixedFormat xlTypePDF, "CDC Report.PDF", openafterpublish:=True
+    Me.ExportAsFixedFormat xlTypePDF, "Certs Report.PDF", openafterpublish:=True
     
     ShtReport.Visible = xlSheetVeryHidden
     PerfSettingsOff

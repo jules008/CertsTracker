@@ -20,10 +20,10 @@ Public Const RNG_NAMES As String = "A:A"
 Public Const RNG_LAST_COL As String = "AV"
 Public Const RNG_ACTIVE As String = "G1:G1000"
 Public Const NO_COURSES As Integer = 37
-Public Const EXPORT_FILE_PATH As String = "O:\Development Areas\CDC Tracker\Library\"
-Public Const LIBRARY_FILE_PATH As String = "O:\Development Areas\CDC Tracker\Library\"
-Public Const PROJECT_FILE_NAME As String = "CDC Tracker"
-Public Const APP_NAME As String = "CDC Tracker"
+Public Const EXPORT_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
+Public Const LIBRARY_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
+Public Const PROJECT_FILE_NAME As String = "Certs Tracker"
+Public Const APP_NAME As String = "Certs Tracker"
 Public USER_LEVEL As EnumUserLvl
 
 Enum EnumUserLvl
