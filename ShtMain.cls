@@ -11,8 +11,9 @@ Attribute VB_Exposed = True
 ' Module ShtMain
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - Changed reference to Intitialise routine
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 14 Mar 20
 '===============================================================
 Option Explicit
 
@@ -178,7 +179,7 @@ Private Sub BtnImpExp_Click()
 End Sub
 
 Private Sub CmdRefresh_Click()
-    ThisWorkbook.InitialiseSystem
+    ModStartUp.InitialiseSystem
 End Sub
 
 Private Sub CmdReports_Click()

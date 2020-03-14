@@ -83,7 +83,7 @@ Public Sub ImportModules()
     Set VBModules = ThisWorkbook.VBProject.VBComponents
     
     For Each FileObj In FSO.GetFolder(ThisWorkbook.Path).Files
-        Debug.Print FileObj.Name
+'        Debug.Print FileObj.Name
         
         If (FSO.GetExtensionName(FileObj.Name) = "cls") Or _
             (FSO.GetExtensionName(FileObj.Name) = "frm") Or _
@@ -93,7 +93,7 @@ Public Sub ImportModules()
         End If
         
     Next FileObj
-    Debug.Print "End of import"
+'    Debug.Print "End of import"
     Set FSO = Nothing
     Set VBModules = Nothing
 End Sub
@@ -257,16 +257,16 @@ Public Sub CopyShtCodeModule()
 
         With VBModule
 
-            Debug.Print VBModule.Name
+'            Debug.Print VBModule.Name
             If Left(.Name, 3) = "Sht" And .Type <> vbext_ct_Document Then
                 Set SourceMod = VBModule
-                Debug.Print "Source: " & SourceMod.Name
+'                Debug.Print "Source: " & SourceMod.Name
 
                 For Each DestMod In ThisWorkbook.VBProject.VBComponents
-                    Debug.Print DestMod.Name
+'                    Debug.Print DestMod.Name
                     If Left(SourceMod.Name, Len(SourceMod.Name) - 1) = DestMod.Name Then
-                        Debug.Print "Source: " & SourceMod.Name
-                        Debug.Print " Dest: " & DestMod.Name
+'                        Debug.Print "Source: " & SourceMod.Name
+'                        Debug.Print " Dest: " & DestMod.Name
 
                         If SourceMod.CodeModule.CountOfLines > 0 Then
                             DestMod.CodeModule.DeleteLines 1, DestMod.CodeModule.CountOfLines

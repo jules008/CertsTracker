@@ -18,7 +18,7 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 05 Mar 20
+' Date - 14 Mar 20
 '===============================================================
 Option Explicit
 ' ===============================================================
@@ -47,6 +47,8 @@ Public Function UpdateUserAccess() As Boolean
     If NoUsers = 0 Then
         Set RngTgt = Me.Cells(2, COL_USER)
         RngTgt = UserName
+        RngTgt.Offset(0, 1) = Format(Now, "dd mmm yy")
+        RngTgt.Offset(0, 2) = False
         UpdateUserAccess = True
     Else
         Set RngWorking = Me.Range(Me.Cells(2, 1), Me.Cells(NoUsers + 1, NO_COLS))
@@ -54,20 +56,21 @@ Public Function UpdateUserAccess() As Boolean
         Set RngTgt = RngWorking.Find(UserName)
             
         If RngTgt Is Nothing Then
-            Set RngTgt = Me.Columns(1).End(xlDown).Offset(1)
-            RngTgt.Select
+            Set RngTgt = Range("A1").End(xlDown).Offset(1)
             RngTgt = UserName
+            RngTgt.Offset(0, 1) = Format(Now, "dd mmm yy")
+            RngTgt.Offset(0, 2) = False
             UpdateUserAccess = True
+        Else
+            RngTgt.Offset(0, 1) = Format(Now, "dd mmm yy")
+            If RngTgt.Offset(0, 2) = True Then
+                RngTgt.Offset(0, 2) = False
+                UpdateUserAccess = True
+            Else
+                RngTgt.Offset(0, 2) = False
+            End If
         End If
     End If
-    With RngTgt
-        .Offset(0, 1) = Format(Now, "dd mmm yy")
-                
-        If .Offset(0, 2) = True Then
-            .Offset(0, 2) = False
-            UpdateUserAccess = True
-        End If
-    End With
     
     Set RngWorking = Nothing
     Set RngTgt = Nothing
