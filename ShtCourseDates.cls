@@ -11,11 +11,19 @@ Attribute VB_Exposed = True
 ' Module ShtCourseDates
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - Moved Write course dates into module
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 17 Mar 20
 '===============================================================
 Option Explicit
 
+Private Const RNG_COURSE_DATES As String = "B1:AN"
+
+' ===============================================================
+' LookUpCourseDate
+' Looks to see if a course has been completed and returns date.
+' Also can write the date on update
+' ---------------------------------------------------------------
 Public Function LookUpCourseDate(SSN As String, Qual As EnumQual, ReadWrite As EnumRW, Optional CourseDate As String) As String
     Dim QualNeeded As Boolean
     Dim RngSSN As Range
@@ -56,18 +64,10 @@ Public Function LookUpCourseDate(SSN As String, Qual As EnumQual, ReadWrite As E
     Set RngSSN = Nothing
 End Function
 
-Public Sub SaveCourseDate(SSN As String, Qual As EnumQual, CourseDate As Date)
-    Dim RngSSN As Range
-    Dim RngResult As Range
-    
-    Set RngSSN = Me.Range(RNG_SSN)
-    Set RngResult = RngSSN.Find(SSN, , xlValues, xlWhole, xlByRows, xlNext)
-
-
-    Set RngResult = Nothing
-    Set RngSSN = Nothing
-End Sub
-
+' ===============================================================
+' GetAllDates
+' Returns all dates from SSN
+' ---------------------------------------------------------------
 Public Function GetAllDates(SSN As String) As Variant()
     Dim RngSSN As Range
     Dim RngResult As Range
@@ -87,14 +87,48 @@ Public Function GetAllDates(SSN As String) As Variant()
 
 End Function
 
+' ===============================================================
+' GetAllData
+' Returns all data from sheet
+' ---------------------------------------------------------------
 Public Function GetAllData() As Variant()
     Dim AryDataAll() As Variant
-    AryDataAll = Range("B1:AN" & ShtMain.GetCrewCountAll + 3)
+    AryDataAll = Range(RNG_COURSE_DATES & ShtMain.GetCrewCountAll + 3)
     GetAllData = AryDataAll
 
 End Function
 
+' ===============================================================
+' ClearAllData
+' Clears all data from sheet
+' ---------------------------------------------------------------
 Public Sub ClearAllData()
-    Range("B3:AN1000").ClearContents
+    Range(RNG_COURSE_DATES & "1000").ClearContents
 End Sub
+
+' ===============================================================
+' WriteCourseDates
+' writes Course Dates from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Public Function WriteCourseDates(ByRef AryCourseDates() As Variant) As Boolean
+        
+    On Error GoTo ErrorHandler
+    
+    ShtCourseDates.Unprotect SEC_KEY
+    
+    ClearAllData
+    
+    Range(RNG_COURSE_DATES & UBound(AryCourseDates)) = AryCourseDates
+       
+    If USER_LEVEL <> DevLvl Then ShtCourseDates.Protect SEC_KEY
+       
+    WriteCourseDates = False
+Exit Function
+
+ErrorHandler:
+    If USER_LEVEL <> DevLvl Then ShtCourseDates.Protect SEC_KEY
+    WriteCourseDates = True
+End Function
+
 

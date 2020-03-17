@@ -3,15 +3,16 @@ Attribute VB_Name = "ModSecurity"
 ' Module ModSecurity
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - Changes to Password
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 17 Mar 20
 '===============================================================
 Option Explicit
 
 Public Sub BasicView()
     
     'Sheet
-    ShtMain.Unprotect "2683174"
+    ShtMain.Unprotect SEC_KEY
     ShtMain.Range("A:H").Locked = True
     ShtMain.CmdReports.Visible = False
     ShtMain.BtnImpExp.Visible = False
@@ -24,14 +25,14 @@ Public Sub BasicView()
     ShtLists.Visible = xlSheetVeryHidden
     ShtRoleLU.Visible = xlSheetVeryHidden
     
-    ShtDashboard.Protect "2683174"
-    ShtMain.Protect "2683174"
+    ShtDashboard.Protect SEC_KEY
+    ShtMain.Protect SEC_KEY
     
     USER_LEVEL = BasicLvl
 End Sub
 
 Public Sub AdminView()
-    ShtMain.Unprotect "2683174"
+    ShtMain.Unprotect SEC_KEY
     ShtMain.Range("A:G").Locked = False
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = False
@@ -45,14 +46,14 @@ Public Sub AdminView()
     ShtLists.Visible = xlSheetHidden
     ShtRoleLU.Visible = xlSheetHidden
      
-    ShtDashboard.Protect "2683174"
-    ShtMain.Protect "2683174"
+    ShtDashboard.Protect SEC_KEY
+    ShtMain.Protect SEC_KEY
        
     USER_LEVEL = AdminLvl
 End Sub
 
 Public Sub DevView()
-    ShtMain.Unprotect "2683174"
+    ShtMain.Unprotect SEC_KEY
     ShtMain.Range("A:G").Locked = False
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = True
@@ -66,7 +67,7 @@ Public Sub DevView()
     ShtLists.Visible = xlSheetVisible
     ShtRoleLU.Visible = xlSheetVisible
     
-    ShtDashboard.Unprotect "2683174"
+    ShtDashboard.Unprotect SEC_KEY
     
     USER_LEVEL = DevLvl
 End Sub

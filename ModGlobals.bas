@@ -4,7 +4,7 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 17 Mar 20
 '===============================================================
 Option Explicit
 
@@ -20,6 +20,7 @@ Public Const RNG_NAMES As String = "A:A"
 Public Const RNG_LAST_COL As String = "AV"
 Public Const RNG_ACTIVE As String = "G1:G1000"
 Public Const NO_COURSES As Integer = 37
+Public Const SEC_KEY As String = "2683174"
 Public Const EXPORT_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
 Public Const LIBRARY_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
 Public Const PROJECT_FILE_NAME As String = "Certification Tracker"
