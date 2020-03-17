@@ -36,8 +36,6 @@ Public Function RetQualStatus(QualDate As Variant, Qual As EnumQual) As EnumExpi
     
     LUValue = Me.Cells(21, Qual + 1).Value
     
-    Debug.Print "Qual Date - " & QualDate, RetQualStatus
-    
     If IsNumeric(QualDate) And QualDate > 10000 Then QualDate = CDate(QualDate)
     
     If IsDate(QualDate) Then
