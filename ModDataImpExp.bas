@@ -3,16 +3,25 @@ Attribute VB_Name = "ModDataImpExp"
 ' Module ModDataImpExp
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - Added Trend data archive
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 17 Mar 20
 '===============================================================
+Option Explicit
 
+Dim FSO As Scripting.FileSystemObject
+' ===============================================================
+' ExportPersDet
+' Exports personal data to a text file and saves at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
 Private Function ExportPersDet(FilePath As String) As Boolean
     Dim AryPersDet() As Variant
     Dim CrewCount As Integer
     Dim rw As Integer
     Dim Cl As Integer
     Dim TxtLine As String
+    Dim ExpFile As TextStream
     
     On Error GoTo ErrorHandler
     
@@ -43,14 +52,20 @@ ErrorHandler:
     ExportPersDet = True
 End Function
 
+' ===============================================================
+' ExportCourseDates
+' Exports Course Dates to a text file and saves at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
 Private Function ExportCourseDates(FilePath As String) As Boolean
     Dim AryDates() As Variant
     Dim CrewCount As Integer
     Dim rw As Integer
     Dim Cl As Integer
     Dim TxtLine As String
+    Dim ExpFile As TextStream
     
-    On errror GoTo ErrorHandler
+    On Error GoTo ErrorHandler
     
     AryDates = ShtCourseDates.GetAllData
     
@@ -78,13 +93,19 @@ ErrorHandler:
     ExportCourseDates = True
 End Function
 
+' ===============================================================
+' ExportData
+' Main routine to carry out data export.  Calls other routines to
+' do the actual export.
+' ---------------------------------------------------------------
 Public Sub ExportData()
     Dim Fldr As FileDialog
     Dim FilePath As String
     Dim ErrFlag1 As Boolean
     Dim ErrFlag2 As Boolean
+    Dim ErrFlag3 As Boolean
     
-    On errror GoTo ErrorHandler
+    On Error GoTo ErrorHandler
     
     Set Fldr = Application.FileDialog(msoFileDialogFolderPicker)
     
@@ -98,8 +119,9 @@ Public Sub ExportData()
     
     ErrFlag1 = ModDataImpExp.ExportCourseDates(FilePath)
     ErrFlag2 = ModDataImpExp.ExportPersDet(FilePath)
+    ErrFlag3 = ModDataImpExp.ExportTrendData(FilePath)
     
-    If ErrFlag1 Or ErrFlag2 Then GoTo ErrorHandler
+    If ErrFlag1 Or ErrFlag2 Or ErrFlag3 Then GoTo ErrorHandler
     
     MsgBox "Export Complete", vbOKOnly + vbInformation, "Data Export"
     
@@ -114,25 +136,46 @@ ErrorHandler:
 
 End Sub
 
+' ===============================================================
+' ClearAllData
+' Clears all data from sheet.
+' ---------------------------------------------------------------
 Public Sub ClearAllData()
-    ShtMain.Unprotect "2683174"
+    Dim Response As Integer
     
-    ShtMain.AutoFilterMode = False
-    ShtMain.CmdShowHide.Caption = "Hide Leavers"
-    ShtMain.ClearPersDetails
-    ShtCourseDates.ClearAllData
+    Response = MsgBox("Are you sure you want to clear all datails!!", vbCritical + vbYesNo, "Clear Datail")
     
-    If USER_LEVEL <> DevLvl Then ShtMain.Protect "2683174"
-
+    If Response = 6 Then
+        ShtMain.Unprotect SEC_KEY
+        ShtCourseDates.Unprotect SEC_KEY
+        ShtDashboard.Unprotect SEC_KEY
+        
+        ShtMain.AutoFilterMode = False
+        ShtMain.CmdShowHide.Caption = "Hide Leavers"
+        ShtMain.ClearPersDetails
+        ShtCourseDates.ClearAllData
+        
+        If USER_LEVEL <> DevLvl Then ShtMain.Protect SEC_KEY
+        If USER_LEVEL <> DevLvl Then ShtCourseDates.Protect SEC_KEY
+        If USER_LEVEL <> DevLvl Then ShtDashboard.Protect SEC_KEY
+    End If
 End Sub
 
+' ===============================================================
+' ImportData
+' Main routine to import data from text files.  Calls other routines
+' to do the actual data import.
+' ---------------------------------------------------------------
 Public Sub ImportData()
     Dim Fldr As FileDialog
     Dim FilePath As String
     Dim ErrFlag1 As Boolean
     Dim ErrFlag2 As Boolean
+    Dim ErrFlag3 As Boolean
     
     On Error GoTo ErrorHandler
+    
+    ClearAllData
     
     Set Fldr = Application.FileDialog(msoFileDialogFolderPicker)
     
@@ -146,8 +189,9 @@ Public Sub ImportData()
     
     ErrFlag1 = ImportPersData(FilePath)
     ErrFlag2 = ImportCourseDates(FilePath)
+    ErrFlag3 = ImportTrendData(FilePath)
     
-    If ErrFlag1 Or ErrFlag2 Then GoTo ErrorHandler
+    If ErrFlag1 Or ErrFlag2 Or ErrFlag3 Then GoTo ErrorHandler
     
     MsgBox "Import Complete", vbOKOnly + vbInformation, "Data Export"
     
@@ -162,8 +206,13 @@ ErrorHandler:
 
 End Sub
 
+' ===============================================================
+' ImportPersData
+' Imports Personal Data from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
 Private Function ImportPersData(FilePath) As Boolean
-    Dim AryImport() As String
+    Dim AryImport() As Variant
     Dim FullFilePath As String
     Dim TotalLines As Integer
     
@@ -174,7 +223,7 @@ Private Function ImportPersData(FilePath) As Boolean
     AryImport = DelimitedTextFileToArray(FullFilePath)
     TotalLines = UBound(AryImport)
     
-    ShtMain.Range("A4:G" & TotalLines + 3) = AryImport
+    ShtMain.WritePersDetails AryImport
     
     ImportPersData = False
 Exit Function
@@ -183,15 +232,20 @@ ErrorHandler:
     ImportPersData = True
 End Function
 
-Private Function DelimitedTextFileToArray(FilePath As String) As String()
+' ===============================================================
+' DelimitedTextFileToArray
+' Takes a delimited text file and imports into an array
+' ---------------------------------------------------------------
+Private Function DelimitedTextFileToArray(FilePath As String) As Variant()
     Dim Delimiter As String
     Dim TextFile As Integer
     Dim FileContent As String
     Dim LineArray() As String
-    Dim DataArray() As String
+    Dim DataArray() As Variant
     Dim TempArray() As String
     Dim Rows As Integer
     Dim rw As Long, col As Long
+    Dim x, y As Integer
     
     Delimiter = ";"
     rw = 0
@@ -221,8 +275,13 @@ Private Function DelimitedTextFileToArray(FilePath As String) As String()
     DelimitedTextFileToArray = DataArray()
 End Function
 
+' ===============================================================
+' ImportCourseDates
+' Imports Course Dates from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
 Private Function ImportCourseDates(FilePath) As Boolean
-    Dim AryImport() As String
+    Dim AryImport() As Variant
     Dim FullFilePath As String
     Dim TotalLines As Integer
     
@@ -233,12 +292,80 @@ Private Function ImportCourseDates(FilePath) As Boolean
     AryImport = DelimitedTextFileToArray(FullFilePath)
     TotalLines = UBound(AryImport)
     
-    ShtCourseDates.Range("B1:AN" & TotalLines + 3) = AryImport
+    ShtCourseDates.WriteCourseDates AryImport
     
     ImportCourseDates = False
 Exit Function
 
 ErrorHandler:
     ImportCourseDates = True
+End Function
+
+' ===============================================================
+' ExportTrendData
+' Exports Trend data to a text file and saves at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Private Function ExportTrendData(FilePath As String) As Boolean
+    Dim AryTrendData() As Variant
+    Dim CrewCount As Integer
+    Dim rw As Integer
+    Dim Cl As Integer
+    Dim TxtLine As String
+    Dim ExpFile As TextStream
+    
+    On Error GoTo ErrorHandler
+    
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    
+    Set ExpFile = FSO.CreateTextFile(FilePath & "\TrendData.txt", True)
+    
+    AryTrendData = ShtDashboard.GetTrendData
+    
+    For rw = LBound(AryTrendData) To UBound(AryTrendData)
+        TxtLine = ""
+        For Cl = 1 To 5
+            TxtLine = TxtLine & AryTrendData(rw, Cl) & ";"
+        Next
+        ExpFile.WriteLine (TxtLine)
+    Next
+    ExpFile.Close
+    
+    ExportTrendData = False
+    
+    Set ExpFile = Nothing
+    Set FSO = Nothing
+Exit Function
+
+ErrorHandler:
+    Set ExpFile = Nothing
+    Set FSO = Nothing
+    ExportTrendData = True
+End Function
+
+' ===============================================================
+' ImportTrendData
+' Imports Trend Data from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Private Function ImportTrendData(FilePath) As Boolean
+    Dim AryImport() As Variant
+    Dim FullFilePath As String
+    Dim TotalLines As Integer
+    
+    On Error GoTo ErrorHandler
+    
+    FullFilePath = FilePath & "\TrendData.txt"
+    
+    AryImport = DelimitedTextFileToArray(FullFilePath)
+    TotalLines = UBound(AryImport)
+    
+    ShtDashboard.WriteTrendData AryImport
+    
+    ImportTrendData = False
+Exit Function
+
+ErrorHandler:
+    ImportTrendData = True
 End Function
 

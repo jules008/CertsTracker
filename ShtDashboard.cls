@@ -11,11 +11,18 @@ Attribute VB_Exposed = True
 ' Module ShtDashboard
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - Added procedure to send trend data
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 17 Mar 20
 '===============================================================
 Option Explicit
 
+Private Const RNG_TREND As String = "S66:W109"
+' ===============================================================
+' UpdateTrend
+' Updates the current trend data with current figures.  At the
+' Start of each month, push back data and archive
+' ---------------------------------------------------------------
 Private Sub UpdateTrend()
     Dim CurrMonth As Integer
     Dim SheetMonth As Integer
@@ -40,7 +47,7 @@ Private Sub UpdateTrend()
     SheetMonth = [Sheet_month]
     CurrMonth = [Curr_Month]
     
-    ShtDashboard.Unprotect "2683174"
+    ShtDashboard.Unprotect SEC_KEY
     
     If SheetMonth <> CurrMonth Then MonthChange = True
     
@@ -56,7 +63,7 @@ Private Sub UpdateTrend()
     
     [Sheet_month] = CurrMonth
     
-    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect SEC_KEY
     
     Set RngTopRow = Nothing
     Set RngQIP = Nothing
@@ -74,15 +81,50 @@ ErrorHandler:
     Set RngPerc = Nothing
     Set RngNotQIP = Nothing
 
-    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect SEC_KEY
 
 End Sub
 
-
+' ===============================================================
+' Worksheet_Activate
+' Event processing for worksheet activate
+' ---------------------------------------------------------------
 Private Sub Worksheet_Activate()
     UpdateTrend
 End Sub
 
-Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+' ===============================================================
+' GetTrendData
+' Gets trend data and returns in a text array
+' ---------------------------------------------------------------
+Public Function GetTrendData() As Variant()
+    Dim AryTrendData() As Variant
+    
+    AryTrendData = Range(RNG_TREND)
+    GetTrendData = AryTrendData
+End Function
 
-End Sub
+' ===============================================================
+' WriteTrendData
+' writes Trend Data from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Public Function WriteTrendData(ByRef AryTrendData() As Variant) As Boolean
+        
+    On Error GoTo ErrorHandler
+    
+    ShtDashboard.Unprotect SEC_KEY
+        
+    Me.Range(RNG_TREND) = AryTrendData
+    
+    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect SEC_KEY
+    
+    WriteTrendData = False
+Exit Function
+
+ErrorHandler:
+    If USER_LEVEL <> DevLvl Then ShtDashboard.Protect SEC_KEY
+    
+    WriteTrendData = True
+End Function
+

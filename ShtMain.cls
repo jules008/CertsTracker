@@ -11,11 +11,18 @@ Attribute VB_Exposed = True
 ' Module ShtMain
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - formatting changes
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 17 Mar 20
 '===============================================================
 Option Explicit
 
+Private Const RNG_PERS_DET As String = "A4:G"
+' ===============================================================
+' RefreshQuals
+' Refreshes all qulaification data.  If Row No is specified, only
+' refreshes that line.
+' ---------------------------------------------------------------
 Public Sub RefreshQuals(Optional RowNo As Integer)
     Dim RngCell As Range
     Dim RngRoleQualArea As Range
@@ -96,16 +103,27 @@ ErrorHandler:
 
 End Sub
 
+' ===============================================================
+' GetSSN
+' Returns SSN for active line
+' ---------------------------------------------------------------
 Private Function GetSSN(RowNo As Integer) As String
     GetSSN = Me.Cells(RowNo, 6)
 End Function
 
+' ===============================================================
+' GetStatus
+' Returns Status for active line
+' ---------------------------------------------------------------
 Private Function GetStatus(RowNo As Integer) As EnumStatus
     If Me.Cells(RowNo, 7) = "Active" Then GetStatus = Active
     If Me.Cells(RowNo, 7) = "Inactive" Then GetStatus = inactive
 End Function
 
-
+' ===============================================================
+' GetRole
+' Returns Role for active line
+' ---------------------------------------------------------------
 Private Function GetRole(RowNo As Integer) As EnumRole
     Dim StrRole As String
     
@@ -143,6 +161,10 @@ Private Function GetRole(RowNo As Integer) As EnumRole
     End If
 End Function
 
+' ===============================================================
+' GetQual
+' Returns Qualification for active Col
+' ---------------------------------------------------------------
 Private Function GetQual(ColNo As Integer) As EnumQual
     Dim StrQual As String
     
@@ -150,17 +172,23 @@ Private Function GetQual(ColNo As Integer) As EnumQual
 
 End Function
 
+' ===============================================================
+' BtnAddNew_Click
+' ---------------------------------------------------------------
 Private Sub BtnAddNew_Click()
     PerfSettingsOn
-    Unprotect "2683174"
+    Unprotect SEC_KEY
     Range("G" & Me.GetCrewCountAll + 4) = "Active"
     Range("G" & Me.GetCrewCountAll + 4).Select
     ShowHide
     ShowHide
-    Protect "2683174"
+    Protect SEC_KEY
     PerfSettingsOff
 End Sub
 
+' ===============================================================
+' BtnEnterDate_Click
+' ---------------------------------------------------------------
 Private Sub BtnEnterDate_Click()
     Dim SSN As String
     
@@ -173,30 +201,51 @@ Private Sub BtnEnterDate_Click()
     End If
 End Sub
 
+' ===============================================================
+' BtnImpExp_Click
+' ---------------------------------------------------------------
 Private Sub BtnImpExp_Click()
     FrmImpExp.Show
 End Sub
 
+' ===============================================================
+' CmdRefresh_Click
+' ---------------------------------------------------------------
 Private Sub CmdRefresh_Click()
     ThisWorkbook.InitialiseSystem
 End Sub
 
+' ===============================================================
+' CmdReports_Click
+' ---------------------------------------------------------------
 Private Sub CmdReports_Click()
     FrmReports.Show
 End Sub
 
+' ===============================================================
+' CmdShowHide_Click
+' ---------------------------------------------------------------
 Private Sub CmdShowHide_Click()
     ShowHide
 End Sub
 
+' ===============================================================
+' CmdSort_Click
+' ---------------------------------------------------------------
 Private Sub CmdSort_Click()
     SortBy CmoSortby.ListIndex
 End Sub
 
+' ===============================================================
+' Worksheet_Activate
+' ---------------------------------------------------------------
 Private Sub Worksheet_Activate()
     PerfSettingsOff
 End Sub
 
+' ===============================================================
+' Worksheet_BeforeDoubleClick
+' ---------------------------------------------------------------
 Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
     Dim CrewCnt As Integer
     Dim SSN As String
@@ -218,6 +267,9 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
     Target.Offset(1, 0).Select
 End Sub
 
+' ===============================================================
+' Worksheet_Change
+' ---------------------------------------------------------------
 Private Sub Worksheet_Change(ByVal Target As Range)
     Dim NoRows As Integer
     
@@ -235,11 +287,19 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     
 End Sub
 
+' ===============================================================
+' GetCrewCountAll
+' Returns total number of people
+' ---------------------------------------------------------------
 
 Public Function GetCrewCountAll() As Integer
     GetCrewCountAll = Application.WorksheetFunction.CountA(ShtMain.Range("A:A")) - 1
 End Function
 
+' ===============================================================
+' GetName
+' Returns name from SSN
+' ---------------------------------------------------------------
 Public Function GetName(SSN As String) As String
     Dim RngSSN As Range
     Dim RngResult As Range
@@ -256,6 +316,10 @@ Public Function GetName(SSN As String) As String
     
 End Function
 
+' ===============================================================
+' SortBy
+' sorts personal details by submitted field
+' ---------------------------------------------------------------
 Public Sub SortBy(Field As Integer)
     Dim RngSort As Range
     Dim RngIndex As Range
@@ -265,11 +329,11 @@ Public Sub SortBy(Field As Integer)
     Set RngSort = Range("A4:AS" & ModMain.NoRows + 3)
     Set RngIndex = Range("A4")
     
-    Me.Unprotect "2683174"
+    Me.Unprotect SEC_KEY
 
     RngSort.Sort RngIndex.Offset(0, Field)
     
-    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
     
     Set RngSort = Nothing
     Set RngIndex = Nothing
@@ -278,13 +342,17 @@ Public Sub SortBy(Field As Integer)
     
 ErrorHandler:
 
-    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
     
     Set RngSort = Nothing
     Set RngIndex = Nothing
 
 End Sub
 
+' ===============================================================
+' ShowHide
+' alternately shows or hides active people.
+' ---------------------------------------------------------------
 Private Sub ShowHide()
     Dim RngShowHide As Range
     
@@ -292,7 +360,7 @@ Private Sub ShowHide()
     
     Set RngShowHide = Range("A3:AS" & ModMain.NoRows + 3)
     
-    Me.Unprotect "2683174"
+    Me.Unprotect SEC_KEY
     
     If CmdShowHide.Caption = "Hide Leavers" Then
         RngShowHide.AutoFilter Field:=7, Criteria1:="Active", VisibleDropDown:=False
@@ -302,7 +370,7 @@ Private Sub ShowHide()
         CmdShowHide.Caption = "Hide Leavers"
     End If
     
-    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
     
     Set RngShowHide = Nothing
     
@@ -310,25 +378,63 @@ Private Sub ShowHide()
     
 ErrorHandler:
 
-    If USER_LEVEL <> DevLvl Then Me.Protect "2683174"
+    If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
     
     Set RngShowHide = Nothing
 End Sub
 
+' ===============================================================
+' GetDataAll
+' gets all data from sheet for reporting
+' ---------------------------------------------------------------
 Public Function GetDataAll() As Variant()
     Dim AryDataAll() As Variant
     AryDataAll = Range("A4:AS" & GetCrewCountAll + 3)
     GetDataAll = AryDataAll
 End Function
 
+' ===============================================================
+' GetPersDetails
+' gets all personal details for export
+' ---------------------------------------------------------------
 Public Function GetPersDetails() As Variant()
     Dim AryPersDet As Variant
     AryPersDet = Range("A4:G" & GetCrewCountAll + 3)
     GetPersDetails = AryPersDet
 End Function
 
+' ===============================================================
+' ClearPersDetails
+' clears all personal details from sheet
+' ---------------------------------------------------------------
 Public Sub ClearPersDetails()
     Range("A4:G" & GetCrewCountAll + 3).ClearContents
 End Sub
+
+' ===============================================================
+' WritePersDetails
+' writes Personal Details from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Public Function WritePersDetails(ByRef AryPersDetails() As Variant) As Boolean
+        
+    On Error GoTo ErrorHandler
+    
+    Me.Unprotect SEC_KEY
+    
+    ClearPersDetails
+    
+    Range(RNG_PERS_DET & UBound(AryPersDetails) + 3) = AryPersDetails
+    
+    If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
+       
+    WritePersDetails = False
+Exit Function
+
+ErrorHandler:
+    If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
+    WritePersDetails = True
+End Function
+
 
 
