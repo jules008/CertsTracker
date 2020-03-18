@@ -11,8 +11,9 @@ Attribute VB_Exposed = True
 ' Module ThisWorkbook
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - Moved start up functions to ModStartup
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 05 Mar 20
 '===============================================================
 Option Explicit
 
@@ -20,17 +21,4 @@ Private Sub Workbook_Open()
     InitialiseSystem
 End Sub
 
-Public Sub InitialiseSystem()
-    PerfSettingsOn
-    DetectUser
-    SelectUser
-    If USER_LEVEL = DevLvl Then DevView
-    If USER_LEVEL = AdminLvl Then AdminView
-    If USER_LEVEL = BasicLvl Then BasicView
-    ShtMain.RefreshQuals
-    PerfSettingsOff
-End Sub
 
-Public Sub SelectUser()
-    If USER_LEVEL = DevLvl Then USER_LEVEL = FrmLogin.ShowForm
-End Sub

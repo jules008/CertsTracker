@@ -11,7 +11,8 @@ Attribute VB_Exposed = True
 ' Module ShtMain
 '===============================================================
 ' v1.0.0 - Initial Version
-' v1.0.1 - formatting changes
+' v1.0.1 - Changed reference to Intitialise routine
+' v1.0.2 - formatting changes
 '---------------------------------------------------------------
 ' Date - 17 Mar 20
 '===============================================================
@@ -212,7 +213,7 @@ End Sub
 ' CmdRefresh_Click
 ' ---------------------------------------------------------------
 Private Sub CmdRefresh_Click()
-    ThisWorkbook.InitialiseSystem
+    ModStartUp.InitialiseSystem
 End Sub
 
 ' ===============================================================

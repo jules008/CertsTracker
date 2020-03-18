@@ -3,7 +3,8 @@ Attribute VB_Name = "ModSecurity"
 ' Module ModSecurity
 '===============================================================
 ' v1.0.0 - Initial Version
-' v1.0.1 - Changes to Password
+' v1.0.1 - added new ShtUsers and moved user level detection
+' v1.0.2 - Changes to Password
 '---------------------------------------------------------------
 ' Date - 17 Mar 20
 '===============================================================
@@ -20,6 +21,7 @@ Public Sub BasicView()
     ShtMain.Shapes("TxtView").Visible = msoFalse
     
     ShtReport.Visible = xlSheetVeryHidden
+    ShtUsers.Visible = xlSheetVeryHidden
     ShtColours.Visible = xlSheetVeryHidden
     ShtCourseDates.Visible = xlSheetVeryHidden
     ShtLists.Visible = xlSheetVeryHidden
@@ -41,6 +43,7 @@ Public Sub AdminView()
     ShtMain.Shapes("TxtView").TextFrame.Characters.Text = "Administrator View"
     
     ShtReport.Visible = xlSheetVeryHidden
+    ShtUsers.Visible = xlSheetVeryHidden
     ShtColours.Visible = xlSheetVeryHidden
     ShtCourseDates.Visible = xlSheetVeryHidden
     ShtLists.Visible = xlSheetHidden
@@ -62,6 +65,7 @@ Public Sub DevView()
     ShtMain.Shapes("TxtView").TextFrame.Characters.Text = "Developer View"
     
     ShtReport.Visible = xlSheetVisible
+    ShtUsers.Visible = xlSheetVisible
     ShtColours.Visible = xlSheetVisible
     ShtCourseDates.Visible = xlSheetVisible
     ShtLists.Visible = xlSheetVisible
@@ -88,5 +92,10 @@ Public Sub DetectUser()
             ModGlobals.USER_LEVEL = BasicLvl
         End If
     End If
+    
+    If USER_LEVEL = DevLvl Then USER_LEVEL = FrmLogin.ShowForm
+    If USER_LEVEL = DevLvl Then DevView
+    If USER_LEVEL = AdminLvl Then AdminView
+    If USER_LEVEL = BasicLvl Then BasicView
         
 End Sub
