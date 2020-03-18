@@ -13,12 +13,33 @@ Attribute VB_Exposed = True
 ' v1.0.0 - Initial Version
 ' v1.0.1 - Changed reference to Intitialise routine
 ' v1.0.2 - formatting changes
+' v1.0.3 - Use Enum for cols
 '---------------------------------------------------------------
-' Date - 17 Mar 20
+' Date - 18 Mar 20
 '===============================================================
 Option Explicit
 
-Private Const RNG_PERS_DET As String = "A4:G"
+Private Const RNG_PERS_DET As String = "A4:J"
+Private Const RNG_WORKING_START As String = "L"
+Private Const RNG_WORKING_END As String = ":AV"
+Private Const RNG_WORKING As String = "I4:AS"
+Private Const RNG_PERSON_DET_START As String = "A"
+Private Const RNG_PERSON_DET_END As String = "J"
+Private Const RNG_ACTIVE As String = "J1:J1000"
+
+Enum EnumCols
+    eName = 1
+    eGrade
+    ePosition
+    eDoB
+    eFINNo
+    eDoDRef
+    eContract
+    eWatch
+    eSSN
+    eStatus
+End Enum
+
 ' ===============================================================
 ' RefreshQuals
 ' Refreshes all qulaification data.  If Row No is specified, only
@@ -109,7 +130,7 @@ End Sub
 ' Returns SSN for active line
 ' ---------------------------------------------------------------
 Private Function GetSSN(RowNo As Integer) As String
-    GetSSN = Me.Cells(RowNo, 6)
+    GetSSN = Me.Cells(RowNo, eSSN)
 End Function
 
 ' ===============================================================
@@ -117,8 +138,8 @@ End Function
 ' Returns Status for active line
 ' ---------------------------------------------------------------
 Private Function GetStatus(RowNo As Integer) As EnumStatus
-    If Me.Cells(RowNo, 7) = "Active" Then GetStatus = Active
-    If Me.Cells(RowNo, 7) = "Inactive" Then GetStatus = inactive
+    If Me.Cells(RowNo, eStatus) = "Active" Then GetStatus = Active
+    If Me.Cells(RowNo, eStatus) = "Inactive" Then GetStatus = inactive
 End Function
 
 ' ===============================================================
@@ -128,7 +149,7 @@ End Function
 Private Function GetRole(RowNo As Integer) As EnumRole
     Dim StrRole As String
     
-    StrRole = Me.Cells(RowNo, 3)
+    StrRole = Me.Cells(RowNo, ePosition)
     
     If StrRole <> "" Then
         Select Case StrRole
