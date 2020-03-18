@@ -31,10 +31,14 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub WhatsNewMsg()
         
-    MsgBox "Version " & VERSION & " - What's New" _
+    MsgBox " Updated to Version " & VERSION & " - What's New" _
                     & Chr(13) & "" _
-                    & Chr(13) & " - Added USAR as a Station" _
-                    & Chr(13) & "", vbOKCancel + vbInformation, "New version"
+                    & Chr(13) & " - This What's New Box!" _
+                    & Chr(13) & " - Improved Import and Export routine" _
+                    & Chr(13) & " - Fixed Trend Issue" _
+                    & Chr(13) & " - General Bug Fixes" _
+                    & Chr(13) & " - More to follow....." _
+                    & Chr(13) & "", vbOKOnly + vbInformation, "New version"
 
 
 
