@@ -3,8 +3,9 @@ Attribute VB_Name = "ModReports"
 ' Module ModReports
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - Improved Reporting
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
@@ -88,39 +89,48 @@ Public Sub PromReports(Report As EnumReport)
     End If
 End Sub
 
-Public Sub ExpQualReport()
+Public Sub ExpQualReport(SelWatch As String, Period As Integer)
     Dim AryQuals() As Variant
     Dim AryReport(1 To 500, 1 To 5) As Variant
     Dim ArySource As Variant
     Dim SSN As String
     Dim Name As String
+    Dim Status As String
     Dim Qual As EnumQual
-    Dim QDate As Date
+    Dim QDate As String
     Dim Watch As String
+    Dim DaysToExp As Integer
     Dim Headings(0 To 5) As String
+    Dim Title As String
     Dim i As Integer
     Dim x As Integer
     Dim y As Integer
        
     ArySource = ShtMain.GetDataAll
     y = 1
-    'Loop through array to look for expired qualifiations
+    
     For i = LBound(ArySource) To UBound(ArySource)
+        SSN = ArySource(i, eSSN)
+        Name = ArySource(i, eName)
+        Watch = ArySource(i, eWatch)
+        Status = ArySource(i, eStatus)
         
-        If ArySource(i, 7) = "Active" Then
+        Debug.Print SSN, Name, Watch, Status
+        
+        If Status = "Active" And _
+            (Watch = SelWatch Or _
+            SelWatch = "All") Then
+
             For x = 1 To NO_COURSES
-                If ArySource(i, x + 8) < 0 Then
-                    SSN = ArySource(i, 6)
-                    Name = ArySource(i, 1)
-                    Watch = ArySource(i, 5)
-                    Qual = x
-                    QDate = ShtCourseDates.LookUpCourseDate(SSN, Qual, eRead)
-                    
-                    AryReport(y, 1) = SSN
-                    AryReport(y, 2) = Name
-                    AryReport(y, 3) = Watch
-                    AryReport(y, 4) = QualConvEnum(Qual)
-                    AryReport(y, 5) = QDate
+                Qual = x
+                QDate = ShtCourseDates.LookUpCourseDate(SSN, Qual, eRead)
+                DaysToExp = ShtCourseDates.LookUpCourseExp(SSN, Qual)
+                If DaysToExp < Period Then
+                    AryReport(y, 1) = Name
+                    AryReport(y, 2) = Watch
+                    AryReport(y, 3) = QualConvEnum(Qual)
+                    AryReport(y, 4) = QDate
+                    AryReport(y, 5) = DaysToExp
                     y = y + 1
                 End If
             Next
@@ -128,13 +138,23 @@ Public Sub ExpQualReport()
     Next
     
     If y > 0 Then
-        Headings(0) = "SSN"
-        Headings(1) = "Name"
-        Headings(2) = "Watch"
-        Headings(3) = "Qualification"
-        Headings(4) = "Date"
-
-        ShtReport.PrintReport AryReport, "Expired Qualifications", Headings
+        Headings(0) = "Name"
+        Headings(1) = "Watch"
+        Headings(2) = "Qualification"
+        Headings(3) = "Date"
+        Headings(4) = "Days Till Exp"
+        
+        Select Case Period
+            Case 0
+                Title = "Expired Qualifications"
+            Case 10
+                Title = "Qualifications Due Within 10 Days"
+            Case 30
+                Title = "Qualifications Due Within 30 Days"
+            Case 60
+                Title = "Qualifications Due Within 60 Days"
+            End Select
+        ShtReport.PrintReport AryReport, Title, Headings
     Else
         MsgBox "There were no results for the report", vbInformation + vbOKOnly
     End If

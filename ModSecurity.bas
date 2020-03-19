@@ -6,6 +6,7 @@ Attribute VB_Name = "ModSecurity"
 ' v1.0.1 - added new ShtUsers and moved user level detection
 ' v1.0.2 - Changes to Password
 ' v1.0.3 - Show / Hide column functionality
+' v1.0.4 - Reporting for all
 '---------------------------------------------------------------
 ' Date - 19 Mar 20
 '===============================================================
@@ -17,7 +18,7 @@ Public Sub BasicView()
     With ShtMain
         .Unprotect SEC_KEY
         .Range("A:H").Locked = True
-        .CmdReports.Visible = False
+        .CmdReports.Visible = True
         .BtnImpExp.Visible = False
         .BtnAddNew.Visible = False
         .Shapes("TxtView").Visible = msoFalse

@@ -12,12 +12,50 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Moved Write course dates into module
+' v1.2.0 - Added function to return days to expiry
 '---------------------------------------------------------------
-' Date - 17 Mar 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
 Private Const RNG_COURSE_DATES As String = "B1:AN"
+
+' ===============================================================
+' LookUpCourseExp
+' Checks the expiry date of the course if applicable.  Returns
+' "" if not applicable
+' ---------------------------------------------------------------
+Public Function LookUpCourseExp(SSN As String, Qual As EnumQual) As String
+    Dim QualNeeded As Boolean
+    Dim RngSSN As Range
+    Dim RngResult As Range
+    Dim ResRowNo As Integer
+    Dim ResColNo As Integer
+    Dim QualDate As String
+    Dim DaysToExp As Integer
+    
+    Set RngSSN = Me.Range(RNG_SSN)
+    Set RngResult = RngSSN.Find(SSN, , xlValues, xlWhole, xlByRows, xlNext)
+    
+    If RngResult Is Nothing Then
+        Set RngResult = RngSSN.End(xlDown)
+        RngResult.Offset(1, 0) = SSN
+    End If
+    
+    ResRowNo = RngResult.Row
+    ResColNo = Qual + 2
+    
+    QualDate = Me.Cells(ResRowNo, ResColNo)
+    
+    If QualDate <> "" Then
+        LookUpCourseExp = ShtRoleLU.DaysTillExpiry(QualDate, Qual)
+    Else
+        LookUpCourseExp = 999
+    End If
+    
+    Set RngResult = Nothing
+    Set RngSSN = Nothing
+End Function
 
 ' ===============================================================
 ' LookUpCourseDate

@@ -11,11 +11,16 @@ Attribute VB_Exposed = True
 ' Module ShtRoleLU
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - Added Days to expiry function
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
+'===============================================================
+' LookUpQual
+' Checks to see whether a particular qualification is required for a role
+'---------------------------------------------------------------
 Public Function LookUpQual(Role As EnumRole, Qual As EnumQual) As EnumTriState
     
     If Role = 0 Then
@@ -29,6 +34,10 @@ Public Function LookUpQual(Role As EnumRole, Qual As EnumQual) As EnumTriState
     End If
 End Function
 
+'===============================================================
+' RetQualStatus
+' Returns the status of a qualification, either valid or expired
+'---------------------------------------------------------------
 Public Function RetQualStatus(QualDate As Variant, Qual As EnumQual) As EnumExpiryStatus ' detect if exam has expired
     Dim QualDur As Integer
     Dim LimitedQual As Boolean
@@ -57,4 +66,27 @@ Public Function RetQualStatus(QualDate As Variant, Qual As EnumQual) As EnumExpi
         If QualDate = "EMT" Then RetQualStatus = Valid
     End If
     
+End Function
+
+'===============================================================
+' DaysTillExpiry
+' Takes a date and returns how many days till expiry.  If not
+' applicable, returns 999
+'---------------------------------------------------------------
+Public Function DaysTillExpiry(QualDate As Variant, Qual As EnumQual) As Integer
+    Dim QualDur As Integer
+    Dim QDate As Date
+    
+    QualDur = Me.Cells(21, Qual + 1).Value
+    
+    If QualDur = 0 Or _
+      QualDate = "EMT" Or _
+      QualDate = 1 Then
+        DaysTillExpiry = 999
+    Else
+        QDate = CDate(QualDate)
+        QDate = DateAdd("m", QualDur, QDate)
+        DaysTillExpiry = QDate - Now + 1
+        
+    End If
 End Function

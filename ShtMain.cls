@@ -27,9 +27,10 @@ Private Const COL_WIDTHS As String = "20, 10, 20,10,10, 10, 10, 15, 10, 10"
 Private Const RNG_PERS_DET As String = "A4:J"
 Private Const RNG_WORKING_START As String = "L"
 Private Const RNG_WORKING_END As String = ":AV"
-Private Const RNG_WORKING As String = "I4:AS"
+Private Const RNG_WORKING As String = "L4:AV"
 Private Const RNG_PERSON_DET_START As String = "A"
 Private Const RNG_PERSON_DET_END As String = "J"
+Private Const RNG_DATA_ALL As String = "A4:AV"
 Private Const RNG_ACTIVE As String = "J1:J1000"
 
 ' ===============================================================
@@ -192,8 +193,8 @@ End Function
 Private Sub BtnAddNew_Click()
     PerfSettingsOn
     Unprotect SEC_KEY
-    Range("G" & Me.GetCrewCountAll + 4) = "Active"
-    Range("G" & Me.GetCrewCountAll + 4).Select
+    Range("J" & Me.GetCrewCountAll + 4) = "Active"
+    Range("J" & Me.GetCrewCountAll + 4).Select
     ShowHide
     ShowHide
     Protect SEC_KEY
@@ -413,7 +414,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Function GetDataAll() As Variant()
     Dim AryDataAll() As Variant
-    AryDataAll = Range("A4:AS" & GetCrewCountAll + 3)
+    AryDataAll = Range(RNG_DATA_ALL & GetCrewCountAll + 3)
     GetDataAll = AryDataAll
 End Function
 
