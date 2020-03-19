@@ -19,6 +19,10 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
+' ===============================================================
+' Constants
+' --------------------------------------------------------------
+Private Const COL_WIDTHS As String = "20, 10, 20, 10, 10, 15, 10, 10"
 Private Const RNG_PERS_DET As String = "A4:J"
 Private Const RNG_WORKING_START As String = "L"
 Private Const RNG_WORKING_END As String = ":AV"
@@ -431,6 +435,51 @@ End Function
 ' ---------------------------------------------------------------
 Public Sub ClearPersDetails()
     Range("A4:G" & GetCrewCountAll + 3).ClearContents
+End Sub
+
+' ===============================================================
+' ReadColStatus
+' Returns whether the specified column is hidden
+' ---------------------------------------------------------------
+Public Function ReadColStatus(Col As EnumColHdgs) As Boolean
+    ReadColStatus = Not Me.Columns(Col).EntireColumn.Hidden
+End Function
+
+' ===============================================================
+' SetColStatus
+' hides or shows specified column
+' ---------------------------------------------------------------
+Public Sub SetColStatus(Col As EnumColHdgs, Show As Boolean)
+    Dim i As Integer
+    Dim ColWidths() As String
+    
+    ColWidths = Split(COL_WIDTHS, ",")
+    
+    If Show Then
+        Me.Columns(Col).EntireColumn.Hidden = False
+        Me.Columns(Col).ColumnWidth = ColWidths(Col - 1)
+    Else
+        Me.Columns(Col).EntireColumn.Hidden = True
+    End If
+End Sub
+
+' ===============================================================
+' SetColStatus
+' hides or shows specified column
+' ---------------------------------------------------------------
+Public Sub SetControlPos(Cntrl As String, Top As Long, Left As Long, Height As Long, Width As Long)
+    
+    If Top + Left + Width + Height = 0 Then
+        ShtMain.Shapes(Cntrl).Visible = False
+    Else
+        ShtMain.Shapes(Cntrl).Visible = True
+        With ShtMain.Shapes(Cntrl)
+            .Top = Top
+            .Left = Left
+            .Height = Height
+            .Width = Width
+        End With
+    End If
 End Sub
 
 ' ===============================================================

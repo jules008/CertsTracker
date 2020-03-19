@@ -114,6 +114,16 @@ Enum EnumExpiryStatus
     Expired
 End Enum
     
+Enum EnumColHdgs
+    Name = 0
+    Grade
+    Position
+    Contract
+    Watch
+    SSN
+    Status
+    DodRef
+End Enum
 
 Public Function QualConvEnum(Qual As EnumQual) As String
     Select Case Qual
