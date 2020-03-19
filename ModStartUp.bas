@@ -17,9 +17,9 @@ Option Explicit
 ' InitialiseSystem
 ' Initialisation routine
 ' ---------------------------------------------------------------
-Public Sub InitialiseSystem()
+Public Sub InitialiseSystem(Prompt As Boolean)
     PerfSettingsOn
-    ModSecurity.DetectUser
+    ModSecurity.DetectUser Prompt
     If ShtUsers.UpdateUserAccess Then WhatsNewMsg
     ShtMain.RefreshQuals
     PerfSettingsOff

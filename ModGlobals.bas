@@ -3,8 +3,10 @@ Attribute VB_Name = "ModGlobals"
 ' Module ModGlobals
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - Moved Range constants to sheets
+' v1.0.2 - Added Enum Column headings
 '---------------------------------------------------------------
-' Date - 17 Mar 20
+' Date - 19Mar 20
 '===============================================================
 Option Explicit
 
@@ -13,14 +15,8 @@ Public Const ISS_DATE As String = "05 Mar 20"
 Public Const RNG_SSN As String = "B2:B500"
 Public Const RNG_EMT As String = "AK:AK"
 Public Const RNG_CREW_COUNT As String = "A:A"
-Public Const RNG_WORKING_START As String = "I"
-Public Const RNG_WORKING_END As String = ":AS"
-Public Const RNG_WORKING As String = "I4:AS"
-Public Const RNG_PERSON_DET_START As String = "A"
-Public Const RNG_PERSON_DET_END As String = "G"
 Public Const RNG_NAMES As String = "A:A"
 Public Const RNG_LAST_COL As String = "AV"
-Public Const RNG_ACTIVE As String = "G1:G1000"
 Public Const NO_COURSES As Integer = 37
 Public Const SEC_KEY As String = "2683174"
 Public Const EXPORT_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
@@ -119,6 +115,18 @@ Enum EnumExpiryStatus
     Expired
 End Enum
     
+Enum EnumCols
+    eName = 1
+    eGrade
+    ePosition
+    eDoB
+    eFINNo
+    eDoDRef
+    eContract
+    eWatch
+    eSSN
+    eStatus
+End Enum
 
 Public Function QualConvEnum(Qual As EnumQual) As String
     Select Case Qual

@@ -5,20 +5,26 @@ Attribute VB_Name = "ModSecurity"
 ' v1.0.0 - Initial Version
 ' v1.0.1 - added new ShtUsers and moved user level detection
 ' v1.0.2 - Changes to Password
+' v1.0.3 - Show / Hide column functionality
 '---------------------------------------------------------------
-' Date - 17 Mar 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
 Public Sub BasicView()
     
     'Sheet
-    ShtMain.Unprotect SEC_KEY
-    ShtMain.Range("A:H").Locked = True
-    ShtMain.CmdReports.Visible = False
-    ShtMain.BtnImpExp.Visible = False
-    ShtMain.BtnAddNew.Visible = False
-    ShtMain.Shapes("TxtView").Visible = msoFalse
+    With ShtMain
+        .Unprotect SEC_KEY
+        .Range("A:H").Locked = True
+        .CmdReports.Visible = False
+        .BtnImpExp.Visible = False
+        .BtnAddNew.Visible = False
+        .Shapes("TxtView").Visible = msoFalse
+        .BtnShowHideCols.Visible = False
+        .SecureCols
+        .Protect SEC_KEY
+    End With
     
     ShtReport.Visible = xlSheetVeryHidden
     ShtUsers.Visible = xlSheetVeryHidden
@@ -28,7 +34,6 @@ Public Sub BasicView()
     ShtRoleLU.Visible = xlSheetVeryHidden
     
     ShtDashboard.Protect SEC_KEY
-    ShtMain.Protect SEC_KEY
     
     USER_LEVEL = BasicLvl
 End Sub
@@ -39,6 +44,7 @@ Public Sub AdminView()
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = False
     ShtMain.BtnAddNew.Visible = True
+    ShtMain.BtnShowHideCols.Visible = True
     ShtMain.Shapes("TxtView").Visible = msoCTrue
     ShtMain.Shapes("TxtView").TextFrame.Characters.Text = "Administrator View"
     
@@ -61,6 +67,7 @@ Public Sub DevView()
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = True
     ShtMain.BtnAddNew.Visible = True
+    ShtMain.BtnShowHideCols.Visible = True
     ShtMain.Shapes("TxtView").Visible = msoTrue
     ShtMain.Shapes("TxtView").TextFrame.Characters.Text = "Developer View"
     
@@ -82,7 +89,7 @@ Private Sub MenuOff()
     End With
 End Sub
 
-Public Sub DetectUser()
+Public Sub DetectUser(Prompt As Boolean)
     If Application.UserName = "MOHR, CHRISTOPHER M GS-10 USAF USAFE 423 CES/CEF" Then
         ModGlobals.USER_LEVEL = AdminLvl
     Else
@@ -93,7 +100,7 @@ Public Sub DetectUser()
         End If
     End If
     
-    If USER_LEVEL = DevLvl Then USER_LEVEL = FrmLogin.ShowForm
+    If Prompt Then USER_LEVEL = FrmLogin.ShowForm
     If USER_LEVEL = DevLvl Then DevView
     If USER_LEVEL = AdminLvl Then AdminView
     If USER_LEVEL = BasicLvl Then BasicView
