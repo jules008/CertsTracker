@@ -13,12 +13,25 @@ Attribute VB_Exposed = True
 ' v1.0.0 - Initial Version
 ' v1.0.1 - Changed reference to Intitialise routine
 ' v1.0.2 - formatting changes
+' v1.0.3 - Use Enum for cols
+' v1.0.4 - Show hide Cols
 '---------------------------------------------------------------
-' Date - 17 Mar 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
-Private Const RNG_PERS_DET As String = "A4:G"
+' ===============================================================
+' Constants
+' --------------------------------------------------------------
+Private Const COL_WIDTHS As String = "20, 10, 20,10,10, 10, 10, 15, 10, 10"
+Private Const RNG_PERS_DET As String = "A4:J"
+Private Const RNG_WORKING_START As String = "L"
+Private Const RNG_WORKING_END As String = ":AV"
+Private Const RNG_WORKING As String = "I4:AS"
+Private Const RNG_PERSON_DET_START As String = "A"
+Private Const RNG_PERSON_DET_END As String = "J"
+Private Const RNG_ACTIVE As String = "J1:J1000"
+
 ' ===============================================================
 ' RefreshQuals
 ' Refreshes all qulaification data.  If Row No is specified, only
@@ -109,7 +122,7 @@ End Sub
 ' Returns SSN for active line
 ' ---------------------------------------------------------------
 Private Function GetSSN(RowNo As Integer) As String
-    GetSSN = Me.Cells(RowNo, 6)
+    GetSSN = Me.Cells(RowNo, eSSN)
 End Function
 
 ' ===============================================================
@@ -117,8 +130,8 @@ End Function
 ' Returns Status for active line
 ' ---------------------------------------------------------------
 Private Function GetStatus(RowNo As Integer) As EnumStatus
-    If Me.Cells(RowNo, 7) = "Active" Then GetStatus = Active
-    If Me.Cells(RowNo, 7) = "Inactive" Then GetStatus = inactive
+    If Me.Cells(RowNo, eStatus) = "Active" Then GetStatus = Active
+    If Me.Cells(RowNo, eStatus) = "Inactive" Then GetStatus = inactive
 End Function
 
 ' ===============================================================
@@ -128,7 +141,7 @@ End Function
 Private Function GetRole(RowNo As Integer) As EnumRole
     Dim StrRole As String
     
-    StrRole = Me.Cells(RowNo, 3)
+    StrRole = Me.Cells(RowNo, ePosition)
     
     If StrRole <> "" Then
         Select Case StrRole
@@ -210,10 +223,20 @@ Private Sub BtnImpExp_Click()
 End Sub
 
 ' ===============================================================
+' BtnShowHideCols_Click
+' ---------------------------------------------------------------
+Private Sub BtnShowHideCols_Click()
+    FrmShowHideCols.Show
+End Sub
+
+' ===============================================================
 ' CmdRefresh_Click
 ' ---------------------------------------------------------------
 Private Sub CmdRefresh_Click()
-    ModStartUp.InitialiseSystem
+    Dim Prompt As Boolean
+    
+    If Application.UserName = "Julian Turner" Then Prompt = True Else Prompt = False
+    ModStartUp.InitialiseSystem Prompt
 End Sub
 
 ' ===============================================================
@@ -413,6 +436,51 @@ Public Sub ClearPersDetails()
 End Sub
 
 ' ===============================================================
+' ReadColStatus
+' Returns whether the specified column is hidden
+' ---------------------------------------------------------------
+Public Function ReadColStatus(Col As EnumCols) As Boolean
+    ReadColStatus = Not Me.Columns(Col).EntireColumn.Hidden
+End Function
+
+' ===============================================================
+' SetColStatus
+' hides or shows specified column
+' ---------------------------------------------------------------
+Public Sub SetColStatus(Col As EnumCols, Show As Boolean)
+    Dim i As Integer
+    Dim ColWidths() As String
+    
+    ColWidths = Split(COL_WIDTHS, ",")
+    
+    If Show Then
+        Me.Columns(Col).EntireColumn.Hidden = False
+        Me.Columns(Col).ColumnWidth = ColWidths(Col - 1)
+    Else
+        Me.Columns(Col).EntireColumn.Hidden = True
+    End If
+End Sub
+
+' ===============================================================
+' SetControlPos
+' Sets the specified control's position
+' ---------------------------------------------------------------
+Public Sub SetControlPos(Cntrl As String, Top As Long, Left As Long, Height As Long, Width As Long)
+    
+    If Top + Left + Width + Height = 0 Then
+        ShtMain.Shapes(Cntrl).Visible = False
+    Else
+        ShtMain.Shapes(Cntrl).Visible = True
+        With ShtMain.Shapes(Cntrl)
+            .Top = Top
+            .Left = Left
+            .Height = Height
+            .Width = Width
+        End With
+    End If
+End Sub
+
+' ===============================================================
 ' WritePersDetails
 ' writes Personal Details from a text file stored at the location
 ' specified.  Returns TRUE if an error occurs.
@@ -437,5 +505,17 @@ ErrorHandler:
     WritePersDetails = True
 End Function
 
+' ===============================================================
+' SecureCols
+' Hides all sensitive columns.  used when closing or saving book
+' ---------------------------------------------------------------
+Public Sub SecureCols()
+    
+    SetColStatus eDoB, False
+    SetColStatus eFINNo, False
+    SetColStatus eDoDRef, False
+    
+    SetControlPos "CmoSortBy", 102, 252, 19, 80
+    SetControlPos "CmdSort", 102, 330, 18, 33
 
-
+End Sub
