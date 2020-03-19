@@ -4,8 +4,9 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.0.1 - Moved Range constants to sheets
+' v1.0.2 - Added Enum Column headings
 '---------------------------------------------------------------
-' Date - 18 Mar 20
+' Date - 19Mar 20
 '===============================================================
 Option Explicit
 
@@ -114,15 +115,17 @@ Enum EnumExpiryStatus
     Expired
 End Enum
     
-Enum EnumColHdgs
-    Name = 0
-    Grade
-    Position
-    Contract
-    Watch
-    SSN
-    Status
-    DodRef
+Enum EnumCols
+    eName = 1
+    eGrade
+    ePosition
+    eDoB
+    eFINNo
+    eDoDRef
+    eContract
+    eWatch
+    eSSN
+    eStatus
 End Enum
 
 Public Function QualConvEnum(Qual As EnumQual) As String

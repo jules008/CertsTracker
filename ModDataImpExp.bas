@@ -244,7 +244,7 @@ Private Function DelimitedTextFileToArray(FilePath As String) As Variant()
     Dim DataArray() As Variant
     Dim TempArray() As String
     Dim Rows As Integer
-    Dim rw As Long, col As Long
+    Dim rw As Long, Col As Long
     Dim x, y As Integer
     
     Delimiter = ";"

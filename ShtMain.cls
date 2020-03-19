@@ -14,15 +14,16 @@ Attribute VB_Exposed = True
 ' v1.0.1 - Changed reference to Intitialise routine
 ' v1.0.2 - formatting changes
 ' v1.0.3 - Use Enum for cols
+' v1.0.4 - Show hide Cols
 '---------------------------------------------------------------
-' Date - 18 Mar 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
 ' ===============================================================
 ' Constants
 ' --------------------------------------------------------------
-Private Const COL_WIDTHS As String = "20, 10, 20, 10, 10, 15, 10, 10"
+Private Const COL_WIDTHS As String = "20, 10, 20,10,10, 10, 10, 15, 10, 10"
 Private Const RNG_PERS_DET As String = "A4:J"
 Private Const RNG_WORKING_START As String = "L"
 Private Const RNG_WORKING_END As String = ":AV"
@@ -30,19 +31,6 @@ Private Const RNG_WORKING As String = "I4:AS"
 Private Const RNG_PERSON_DET_START As String = "A"
 Private Const RNG_PERSON_DET_END As String = "J"
 Private Const RNG_ACTIVE As String = "J1:J1000"
-
-Enum EnumCols
-    eName = 1
-    eGrade
-    ePosition
-    eDoB
-    eFINNo
-    eDoDRef
-    eContract
-    eWatch
-    eSSN
-    eStatus
-End Enum
 
 ' ===============================================================
 ' RefreshQuals
@@ -235,10 +223,20 @@ Private Sub BtnImpExp_Click()
 End Sub
 
 ' ===============================================================
+' BtnShowHideCols_Click
+' ---------------------------------------------------------------
+Private Sub BtnShowHideCols_Click()
+    FrmShowHideCols.Show
+End Sub
+
+' ===============================================================
 ' CmdRefresh_Click
 ' ---------------------------------------------------------------
 Private Sub CmdRefresh_Click()
-    ModStartUp.InitialiseSystem
+    Dim Prompt As Boolean
+    
+    If Application.UserName = "Julian Turner" Then Prompt = True Else Prompt = False
+    ModStartUp.InitialiseSystem Prompt
 End Sub
 
 ' ===============================================================
@@ -441,7 +439,7 @@ End Sub
 ' ReadColStatus
 ' Returns whether the specified column is hidden
 ' ---------------------------------------------------------------
-Public Function ReadColStatus(Col As EnumColHdgs) As Boolean
+Public Function ReadColStatus(Col As EnumCols) As Boolean
     ReadColStatus = Not Me.Columns(Col).EntireColumn.Hidden
 End Function
 
@@ -449,7 +447,7 @@ End Function
 ' SetColStatus
 ' hides or shows specified column
 ' ---------------------------------------------------------------
-Public Sub SetColStatus(Col As EnumColHdgs, Show As Boolean)
+Public Sub SetColStatus(Col As EnumCols, Show As Boolean)
     Dim i As Integer
     Dim ColWidths() As String
     
@@ -464,8 +462,8 @@ Public Sub SetColStatus(Col As EnumColHdgs, Show As Boolean)
 End Sub
 
 ' ===============================================================
-' SetColStatus
-' hides or shows specified column
+' SetControlPos
+' Sets the specified control's position
 ' ---------------------------------------------------------------
 Public Sub SetControlPos(Cntrl As String, Top As Long, Left As Long, Height As Long, Width As Long)
     
@@ -507,5 +505,17 @@ ErrorHandler:
     WritePersDetails = True
 End Function
 
+' ===============================================================
+' SecureCols
+' Hides all sensitive columns.  used when closing or saving book
+' ---------------------------------------------------------------
+Public Sub SecureCols()
+    
+    SetColStatus eDoB, False
+    SetColStatus eFINNo, False
+    SetColStatus eDoDRef, False
+    
+    SetControlPos "CmoSortBy", 102, 252, 19, 80
+    SetControlPos "CmdSort", 102, 330, 18, 33
 
-
+End Sub
