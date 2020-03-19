@@ -193,8 +193,8 @@ End Function
 Private Sub BtnAddNew_Click()
     PerfSettingsOn
     Unprotect SEC_KEY
-    Range("J" & Me.GetCrewCountAll + 4) = "Active"
-    Range("J" & Me.GetCrewCountAll + 4).Select
+    Me.Cells(GetCrewCountAll + 4, eStatus) = "Active"
+    Me.Cells(GetCrewCountAll + 4, eStatus).Select
     ShowHide
     ShowHide
     Protect SEC_KEY
@@ -433,7 +433,7 @@ End Function
 ' clears all personal details from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearPersDetails()
-    Range("A4:G" & GetCrewCountAll + 3).ClearContents
+    Range(RNG_PERS_DET & GetCrewCountAll + 3).ClearContents
 End Sub
 
 ' ===============================================================

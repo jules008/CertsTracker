@@ -17,7 +17,7 @@ Public Sub BasicView()
     'Sheet
     With ShtMain
         .Unprotect SEC_KEY
-        .Range("A:H").Locked = True
+        .Range("A:J").Locked = True
         .CmdReports.Visible = True
         .BtnImpExp.Visible = False
         .BtnAddNew.Visible = False
@@ -41,7 +41,7 @@ End Sub
 
 Public Sub AdminView()
     ShtMain.Unprotect SEC_KEY
-    ShtMain.Range("A:G").Locked = False
+    ShtMain.Range("A:J").Locked = False
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = False
     ShtMain.BtnAddNew.Visible = True
@@ -64,7 +64,7 @@ End Sub
 
 Public Sub DevView()
     ShtMain.Unprotect SEC_KEY
-    ShtMain.Range("A:G").Locked = False
+    ShtMain.Range("A:J").Locked = False
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = True
     ShtMain.BtnAddNew.Visible = True
