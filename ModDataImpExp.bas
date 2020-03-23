@@ -4,8 +4,9 @@ Attribute VB_Name = "ModDataImpExp"
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added Trend data archive
+' v1.1.1 - Added global ranges
 '---------------------------------------------------------------
-' Date - 17 Mar 20
+' Date - 23 Mar 20
 '===============================================================
 Option Explicit
 
@@ -33,7 +34,7 @@ Private Function ExportPersDet(FilePath As String) As Boolean
     
     For rw = LBound(AryPersDet) To UBound(AryPersDet)
         TxtLine = ""
-        For Cl = 1 To 7
+        For Cl = 1 To PERS_DET_NO_COLS
             TxtLine = TxtLine & AryPersDet(rw, Cl) & ";"
         Next
         ExpFile.WriteLine (TxtLine)
@@ -74,7 +75,7 @@ Private Function ExportCourseDates(FilePath As String) As Boolean
     
     For rw = LBound(AryDates) To UBound(AryDates)
         TxtLine = ""
-        For Cl = 1 To 38
+        For Cl = 1 To NO_COURSES + 1
             TxtLine = TxtLine & AryDates(rw, Cl) & ";"
         Next
         ExpFile.WriteLine (TxtLine)
@@ -259,7 +260,7 @@ Private Function DelimitedTextFileToArray(FilePath As String) As Variant()
     
     LineArray() = Split(FileContent, vbCrLf)
     Rows = UBound(LineArray)
-    ReDim DataArray(Rows, 39)
+    ReDim DataArray(Rows, NO_COURSES + 1)
     
     For x = LBound(LineArray) To UBound(LineArray)
         If Len(Trim(LineArray(x))) <> 0 Then
