@@ -13,6 +13,7 @@ Attribute VB_Exposed = True
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Moved Write course dates into module
 ' v1.2.0 - Added function to return days to expiry
+' v1.2.1 - Changed to generic ranges
 '---------------------------------------------------------------
 ' Date - 23 Mar 20
 '===============================================================
@@ -116,7 +117,7 @@ Public Function GetAllDates(SSN As String) As Variant()
     
     If RngResult Is Nothing Then Exit Function
     
-    Set RngResult = RngResult.Offset(0, 1).Resize(1, 37)
+    Set RngResult = RngResult.Offset(0, 1).Resize(1, NO_COURSES)
     
     GetAllDates = RngResult
     

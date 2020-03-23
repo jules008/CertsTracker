@@ -33,11 +33,10 @@ Public Sub WhatsNewMsg()
         
     MsgBox " Updated to Version " & VERSION & " - What's New" _
                     & Chr(13) & "" _
-                    & Chr(13) & " - This What's New Box!" _
-                    & Chr(13) & " - Improved Import and Export routine" _
-                    & Chr(13) & " - Fixed Trend Issue" _
-                    & Chr(13) & " - General Bug Fixes" _
-                    & Chr(13) & " - More to follow....." _
+                    & Chr(13) & " - Added new courses - PPE and Fire Educator" _
+                    & Chr(13) & " - Fixed Show/Hide Active Filter Bug" _
+                    & Chr(13) & " - Fixed Details Form Bug" _
+                    & Chr(13) & " - Put name back on Date Entry Form" _
                     & Chr(13) & "", vbOKOnly + vbInformation, "New version"
 
 

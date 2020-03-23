@@ -330,12 +330,12 @@ Public Function GetName(SSN As String) As String
     Dim RngSSN As Range
     Dim RngResult As Range
     
-    Set RngSSN = Me.Range("F:F")
+    Set RngSSN = Me.Columns(eSSN)
     Set RngResult = RngSSN.Find(SSN, , xlValues, xlWhole, xlByRows, xlNext)
     
     If RngResult Is Nothing Then Exit Function
     
-    GetName = RngResult.Offset(0, -5)
+    GetName = RngResult.Offset(0, eName - eSSN)
     
     Set RngResult = Nothing
     Set RngSSN = Nothing
