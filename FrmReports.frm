@@ -15,13 +15,13 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
-
 '===============================================================
 ' Module FrmReports
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - Added call for new reporting form
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
@@ -32,7 +32,8 @@ Private Sub BtnCancel_Click()
 End Sub
 
 Private Sub BtnRunExpQual_Click()
-    ModReports.ExpQualReport
+    FrmRepSettings.Show
+    Unload Me
 End Sub
 
 Private Sub BtnRunProm_Click()

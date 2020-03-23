@@ -6,6 +6,7 @@ Attribute VB_Name = "ModSecurity"
 ' v1.0.1 - added new ShtUsers and moved user level detection
 ' v1.0.2 - Changes to Password
 ' v1.0.3 - Show / Hide column functionality
+' v1.0.4 - Reporting for all
 '---------------------------------------------------------------
 ' Date - 19 Mar 20
 '===============================================================
@@ -16,8 +17,8 @@ Public Sub BasicView()
     'Sheet
     With ShtMain
         .Unprotect SEC_KEY
-        .Range("A:H").Locked = True
-        .CmdReports.Visible = False
+        .Range("A:J").Locked = True
+        .CmdReports.Visible = True
         .BtnImpExp.Visible = False
         .BtnAddNew.Visible = False
         .Shapes("TxtView").Visible = msoFalse
@@ -40,7 +41,7 @@ End Sub
 
 Public Sub AdminView()
     ShtMain.Unprotect SEC_KEY
-    ShtMain.Range("A:G").Locked = False
+    ShtMain.Range("A:J").Locked = False
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = False
     ShtMain.BtnAddNew.Visible = True
@@ -63,7 +64,7 @@ End Sub
 
 Public Sub DevView()
     ShtMain.Unprotect SEC_KEY
-    ShtMain.Range("A:G").Locked = False
+    ShtMain.Range("A:J").Locked = False
     ShtMain.CmdReports.Visible = True
     ShtMain.BtnImpExp.Visible = True
     ShtMain.BtnAddNew.Visible = True

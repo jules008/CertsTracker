@@ -11,8 +11,9 @@ Attribute VB_Exposed = True
 ' Module ShtReport
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - Added sort to report
 '---------------------------------------------------------------
-' Date - 04 Feb 20
+' Date - 19 Mar 20
 '===============================================================
 Option Explicit
 
@@ -29,9 +30,11 @@ Public Sub PrintReport(ByRef AryReport As Variant, Title As String, Headings() A
     ShtReport.Visible = xlSheetVisible
     
     Range("A3:E50") = AryReport
-    Me.ExportAsFixedFormat xlTypePDF, "Certs Report.PDF", openafterpublish:=True
     
-    ShtReport.Visible = xlSheetVeryHidden
+    Range("E3").Sort Range("E3"), xlDescending, Header:=xlYes
+    Me.ExportAsFixedFormat xlTypePDF, Title & ".pdf", openafterpublish:=True
+    
+    If USER_LEVEL <> DevLvl Then Me.Visible = xlSheetVeryHidden
     PerfSettingsOff
 End Sub
 
