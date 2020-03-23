@@ -100,3 +100,4 @@ End Function
 Public Function GetRoleEligibility(Role As EnumRole) As Variant()
     GetRoleEligibility = Range(RNG_QUALS).Offset(Role, 0)
 End Function
+

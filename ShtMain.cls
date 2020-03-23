@@ -389,7 +389,7 @@ Private Sub ShowHide()
     Me.Unprotect SEC_KEY
     
     If CmdShowHide.Caption = "Hide Leavers" Then
-        RngShowHide.AutoFilter Field:=7, Criteria1:="Active", VisibleDropDown:=False
+        RngShowHide.AutoFilter Field:=eStatus, Criteria1:="Active", VisibleDropDown:=False
         CmdShowHide.Caption = "Show Leavers"
     Else
         ShtMain.AutoFilterMode = False
