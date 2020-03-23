@@ -4,8 +4,9 @@ Attribute VB_Name = "ModReports"
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Improved Reporting
+' v1.1.1 - added global ranges
 '---------------------------------------------------------------
-' Date - 19 Mar 20
+' Date - 23 Mar 20
 '===============================================================
 Option Explicit
 
@@ -24,25 +25,25 @@ Public Sub PromReports(Report As EnumReport)
     Select Case Report
         Case FFtoDO
             Debug.Print FFtoDO
-            AryQuals = ShtRoleLU.Range("B6:AL6")
+            AryQuals = ShtRoleLU.GetRoleEligibility(DriverOp)
             EligibleRnk = "Firefighter"
             ReportTitle = "Driver Operator Promotion Eligibility Report"
         
         Case DOtoCM
             Debug.Print DOtoCM
-            AryQuals = ShtRoleLU.Range("B7:AL7")
+            AryQuals = ShtRoleLU.GetRoleEligibility(CrewManager)
             EligibleRnk = "Driver/Op"
             ReportTitle = "Crew Manager Promotion Eligibility Report"
         
         Case CMtoSC
             Debug.Print CMtoSC
-            AryQuals = ShtRoleLU.Range("B8:AL8")
+            AryQuals = ShtRoleLU.GetRoleEligibility(StationCaptain)
             EligibleRnk = "Crew Manager"
             ReportTitle = "Station Captain Promotion Eligibility Report"
         
         Case SCtoAC
             Debug.Print SCtoAC
-            AryQuals = ShtRoleLU.Range("B12:AL12")
+            AryQuals = ShtRoleLU.GetRoleEligibility(ACOps)
             EligibleRnk = "Station Captain"
             ReportTitle = "Assistant Chief Promotion Eligibility Report"
     

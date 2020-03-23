@@ -6,18 +6,18 @@ Attribute VB_Name = "ModGlobals"
 ' v1.0.1 - Moved Range constants to sheets
 ' v1.0.2 - Added Enum Column headings
 '---------------------------------------------------------------
-' Date - 19 Mar 20
+' Date - 23 Mar 20
 '===============================================================
 Option Explicit
 
-Public Const VERSION As String = "1.1.0"
-Public Const ISS_DATE As String = "19 Mar 20"
+Public Const VERSION As String = "1.2.0"
+Public Const ISS_DATE As String = "23 Mar 20"
 Public Const RNG_SSN As String = "B2:B500"
-Public Const RNG_EMT As String = "AK:AK"
 Public Const RNG_CREW_COUNT As String = "A:A"
 Public Const RNG_NAMES As String = "A:A"
-Public Const RNG_LAST_COL As String = "AV"
-Public Const NO_COURSES As Integer = 37
+Public Const RNG_LAST_COL As String = "AX"
+Public Const NO_COURSES As Integer = 39
+Public Const PERS_DET_NO_COLS As Integer = 10
 Public Const SEC_KEY As String = "2683174"
 Public Const EXPORT_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
 Public Const LIBRARY_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
@@ -53,6 +53,7 @@ End Enum
 
 Enum EnumQual
     CPR = 1
+    PPEProgram
     EMR
     Munitions
     IS100_IS700
@@ -89,6 +90,7 @@ Enum EnumQual
     MSASCBAServicer
     WMD
     LGVCatCE
+    FireEducator
 End Enum
 
 Enum EnumReport

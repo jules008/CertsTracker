@@ -12,11 +12,13 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added Days to expiry function
+' v1.1.1 - Added global ranges
 '---------------------------------------------------------------
-' Date - 19 Mar 20
+' Date - 23 Mar 20
 '===============================================================
 Option Explicit
 
+Private Const RNG_QUALS = "B2:AN2"
 '===============================================================
 ' LookUpQual
 ' Checks to see whether a particular qualification is required for a role
@@ -91,4 +93,10 @@ Public Function DaysTillExpiry(QualDate As Variant, Qual As EnumQual) As Integer
     End If
 End Function
 
-
+'===============================================================
+' GetRoleEligibility
+' Returns an array with the quals required for a specified role
+'---------------------------------------------------------------
+Public Function GetRoleEligibility(Role As EnumRole) As Variant()
+    GetRoleEligibility = Range(RNG_QUALS).Offset(Role, 0)
+End Function

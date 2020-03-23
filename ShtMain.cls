@@ -15,8 +15,9 @@ Attribute VB_Exposed = True
 ' v1.0.2 - formatting changes
 ' v1.0.3 - Use Enum for cols
 ' v1.0.4 - Show hide Cols
+' v1.0.5 - Added global ranges
 '---------------------------------------------------------------
-' Date - 19 Mar 20
+' Date - 23 Mar 20
 '===============================================================
 Option Explicit
 
@@ -26,11 +27,11 @@ Option Explicit
 Private Const COL_WIDTHS As String = "20, 10, 20,10,10, 10, 10, 15, 10, 10"
 Private Const RNG_PERS_DET As String = "A4:J"
 Private Const RNG_WORKING_START As String = "L"
-Private Const RNG_WORKING_END As String = ":AV"
-Private Const RNG_WORKING As String = "L4:AV"
+Private Const RNG_WORKING_END As String = ":AX"
+Private Const RNG_WORKING As String = "L4:AX"
 Private Const RNG_PERSON_DET_START As String = "A"
 Private Const RNG_PERSON_DET_END As String = "J"
-Private Const RNG_DATA_ALL As String = "A4:AV"
+Private Const RNG_DATA_ALL As String = "A4:AX"
 Private Const RNG_ACTIVE As String = "J1:J1000"
 
 ' ===============================================================
@@ -424,7 +425,7 @@ End Function
 ' ---------------------------------------------------------------
 Public Function GetPersDetails() As Variant()
     Dim AryPersDet As Variant
-    AryPersDet = Range("A4:G" & GetCrewCountAll + 3)
+    AryPersDet = Range(RNG_PERS_DET & GetCrewCountAll + 3)
     GetPersDetails = AryPersDet
 End Function
 
