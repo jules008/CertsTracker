@@ -33,7 +33,7 @@ End Enum
 
 Enum EnumStatus
     Active = 1
-    inactive
+    InActive
 End Enum
 
 Enum EnumRole

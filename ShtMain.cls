@@ -17,6 +17,7 @@ Attribute VB_Exposed = True
 ' v1.0.4 - Show hide Cols
 ' v1.0.5 - Added global ranges
 ' v1.0.6 - Changed dev mode switch
+' v1.1.0 - Changed refresh to array
 '---------------------------------------------------------------
 ' Date - 25 Mar 20
 '===============================================================
@@ -42,7 +43,9 @@ Private Const RNG_ACTIVE As String = "J1:J1000"
 ' ---------------------------------------------------------------
 Public Sub RefreshQuals(Optional RowNo As Integer)
     Dim RngCell As Range
+    Dim AryRoleQualArea() As Variant
     Dim RngRoleQualArea As Range
+    Dim AryOutputQualArea() As Variant
     Dim RequiredYN As EnumTriState
     Dim GainedYN As EnumTriState
     Dim Role As EnumRole
@@ -52,10 +55,12 @@ Public Sub RefreshQuals(Optional RowNo As Integer)
     Dim SSN As String
     Dim CourseDate As String
     Dim NoCrew As Integer
+    Dim RowX, ColY, x, y As Integer
     
     On Error GoTo ErrorHandler
     
     NoCrew = ModMain.NoRows
+    ReDim AryOutputQualArea(1 To NoRows, 1 To NO_COURSES)
     
     If RowNo <> 0 Then
         Set RngRoleQualArea = Me.Range(RNG_WORKING_START & RowNo & RNG_WORKING_END & RowNo)
@@ -63,59 +68,62 @@ Public Sub RefreshQuals(Optional RowNo As Integer)
         Set RngRoleQualArea = Me.Range(RNG_WORKING & NoCrew + 3)
     End If
     
-    ModMain.PerfSettingsOn
+    AryRoleQualArea = RngRoleQualArea
+
+   ModMain.PerfSettingsOn
     
-    For Each RngCell In RngRoleQualArea
+    For x = LBound(AryRoleQualArea, 1) To UBound(AryRoleQualArea, 1)
+        For y = LBound(AryRoleQualArea, 2) To UBound(AryRoleQualArea, 2)
         
-        Role = GetRole(RngCell.Row)
-        Qual = GetQual(RngCell.Column)
-        SSN = GetSSN(RngCell.Row)
-        Status = GetStatus(RngCell.Row)
-        CourseDate = ShtCourseDates.LookUpCourseDate(SSN, Qual, eRead)
-        RequiredYN = ShtRoleLU.LookUpQual(Role, Qual)
-        QualStatus = ShtRoleLU.RetQualStatus(CourseDate, Qual)
-        
-        If CourseDate = "" Then
-            GainedYN = No
-        Else
-            GainedYN = Yes
-        End If
-        
-        Select Case RequiredYN
-            Case Is = Yes
-                If GainedYN = Yes Then
-                    If Status = Active Then
-                        If QualStatus = Valid Then RngCell = 4
-                        If QualStatus = Expired Then RngCell = -5
+            Role = GetRole(x + 3)
+            Qual = GetQual(y + PERS_DET_NO_COLS + 1)
+            SSN = GetSSN(x + 3)
+            Status = GetStatus(x + 3)
+            CourseDate = ShtCourseDates.LookUpCourseDate(SSN, Qual, eRead)
+            RequiredYN = ShtRoleLU.LookUpQual(Role, Qual)
+            QualStatus = ShtRoleLU.RetQualStatus(CourseDate, Qual)
+    
+            If CourseDate = "" Then
+                GainedYN = No
+            Else
+                GainedYN = Yes
+            End If
+            
+            Select Case RequiredYN
+                Case Is = Yes
+                    If GainedYN = Yes Then
+                        If Status = Active Then
+                            If QualStatus = Valid Then AryOutputQualArea(x, y) = 4
+                            If QualStatus = Expired Then AryOutputQualArea(x, y) = -5
+                        End If
+                        If Status = InActive Then AryOutputQualArea(x, y) = 9
+                    Else
+                        If Status = Active Then AryOutputQualArea(x, y) = 3
+                        If Status = InActive Then AryOutputQualArea(x, y) = 8
                     End If
-                    If Status = inactive Then RngCell = 9
-                Else
-                    If Status = Active Then RngCell = 3
-                    If Status = inactive Then RngCell = 8
-                End If
-            Case Is = No
-                If GainedYN = Yes Then
-                    If Status = Active Then
-                        If QualStatus = Valid Then RngCell = 1
-                        If QualStatus = Expired Then RngCell = -2
+                Case Is = No
+                    If GainedYN = Yes Then
+                        If Status = Active Then
+                            If QualStatus = Valid Then AryOutputQualArea(x, y) = 1
+                            If QualStatus = Expired Then AryOutputQualArea(x, y) = -2
+                        End If
+                        If Status = InActive Then AryOutputQualArea(x, y) = 7
+                    Else
+                        If Status = Active Then AryOutputQualArea(x, y) = 0
+                        If Status = InActive Then AryOutputQualArea(x, y) = 6
                     End If
-                    If Status = inactive Then RngCell = 7
-                Else
-                    If Status = Active Then RngCell = 0
-                    If Status = inactive Then RngCell = 6
-                End If
-            Case Is = Blank
-                RngCell = ""
-        End Select
-        
-'        Debug.Print RngCell.Address, "Required - " & RequiredYN, "Gained - " & GainedYN, "status - " & Status, "Value - " & RngCell.Value
+                    AryOutputQualArea(x, y) = ""
+            End Select
+        Next y
     Next
-        
+    Range(RNG_WORKING & 1000).ClearContents
+    RngRoleQualArea = AryOutputQualArea
+    Set RngRoleQualArea = Nothing
     ModMain.PerfSettingsOff
 Exit Sub
 
 ErrorHandler:
-    
+    Set RngRoleQualArea = Nothing
     ModMain.PerfSettingsOff
 
 End Sub
@@ -134,14 +142,14 @@ End Function
 ' ---------------------------------------------------------------
 Private Function GetStatus(RowNo As Integer) As EnumStatus
     If Me.Cells(RowNo, eStatus) = "Active" Then GetStatus = Active
-    If Me.Cells(RowNo, eStatus) = "Inactive" Then GetStatus = inactive
+    If Me.Cells(RowNo, eStatus) = "Inactive" Then GetStatus = InActive
 End Function
 
 ' ===============================================================
 ' GetRole
 ' Returns Role for active line
 ' ---------------------------------------------------------------
-Private Function GetRole(RowNo As Integer) As EnumRole
+Private Function GetRole(ByVal RowNo As Integer) As EnumRole
     Dim StrRole As String
     
     StrRole = Me.Cells(RowNo, ePosition)
