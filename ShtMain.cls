@@ -60,6 +60,7 @@ Public Sub RefreshQuals(Optional RowNo As Integer)
     On Error GoTo ErrorHandler
     
     NoCrew = ModMain.NoRows
+    ReDim AryOutputQualArea(1 To NoRows, 1 To NO_COURSES)
     
     If NoCrew = 0 Then Exit Sub
     ReDim AryOutputQualArea(1 To NoCrew, 1 To NO_COURSES)
