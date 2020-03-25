@@ -17,7 +17,7 @@ Attribute VB_Exposed = True
 ' v1.0.4 - Show hide Cols
 ' v1.0.5 - Added global ranges
 ' v1.0.6 - Changed dev mode switch
-' v1.1.0 - Changed refresh to array
+' v1.1.1 - Changed refresh to array
 '---------------------------------------------------------------
 ' Date - 25 Mar 20
 '===============================================================
@@ -60,6 +60,7 @@ Public Sub RefreshQuals(Optional RowNo As Integer)
     On Error GoTo ErrorHandler
     
     NoCrew = ModMain.NoRows
+    If NoCrew = 0 Then Exit Sub
     ReDim AryOutputQualArea(1 To NoRows, 1 To NO_COURSES)
     
     If NoCrew = 0 Then Exit Sub
@@ -115,6 +116,7 @@ Public Sub RefreshQuals(Optional RowNo As Integer)
                         If Status = Active Then AryOutputQualArea(x, y) = 0
                         If Status = InActive Then AryOutputQualArea(x, y) = 6
                     End If
+                Case Is = blank
                     AryOutputQualArea(x, y) = ""
             End Select
         Next y
