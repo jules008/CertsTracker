@@ -10,8 +10,8 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 Option Explicit
 
-Public Const VERSION As String = "1.2.0"
-Public Const ISS_DATE As String = "23 Mar 20"
+Public Const VERSION As String = "1.3.0"
+Public Const ISS_DATE As String = "25 Mar 20"
 Public Const RNG_SSN As String = "B2:B500"
 Public Const RNG_CREW_COUNT As String = "A:A"
 Public Const RNG_NAMES As String = "A:A"
@@ -33,7 +33,7 @@ End Enum
 
 Enum EnumStatus
     Active = 1
-    inactive
+    InActive
 End Enum
 
 Enum EnumRole
