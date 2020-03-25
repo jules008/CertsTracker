@@ -16,8 +16,9 @@ Attribute VB_Exposed = True
 ' v1.0.3 - Use Enum for cols
 ' v1.0.4 - Show hide Cols
 ' v1.0.5 - Added global ranges
+' v1.0.6 - Changed dev mode switch
 '---------------------------------------------------------------
-' Date - 23 Mar 20
+' Date - 25 Mar 20
 '===============================================================
 Option Explicit
 
@@ -237,7 +238,7 @@ End Sub
 Private Sub CmdRefresh_Click()
     Dim Prompt As Boolean
     
-    If Application.UserName = "Julian Turner" Then Prompt = True Else Prompt = False
+    If USER_LEVEL = DevLvl Then Prompt = True Else Prompt = False
     ModStartUp.InitialiseSystem Prompt
 End Sub
 

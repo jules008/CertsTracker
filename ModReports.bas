@@ -6,7 +6,7 @@ Attribute VB_Name = "ModReports"
 ' v1.1.0 - Improved Reporting
 ' v1.1.1 - added global ranges
 '---------------------------------------------------------------
-' Date - 23 Mar 20
+' Date - 25 Mar 20
 '===============================================================
 Option Explicit
 
@@ -54,7 +54,7 @@ Public Sub PromReports(Report As EnumReport)
     'Loop through both arrays to look for qualifiation matches
     For i = LBound(ArySource) To UBound(ArySource)
     
-        If ArySource(i, 3) = EligibleRnk Then
+        If ArySource(i, ePosition) = EligibleRnk Then
             
             Debug.Print ArySource(i, 1), "Eligible"
             Qualified = True
@@ -62,7 +62,8 @@ Public Sub PromReports(Report As EnumReport)
             For x = 1 To NO_COURSES
                 
                 If AryQuals(1, x) = 1 Then
-                    If ArySource(i, x + 8) <> 1 And ArySource(i, x + 8) <> 4 Then Qualified = False
+                    
+                    If ArySource(i, x + PERS_DET_NO_COLS + 1) <> 1 And ArySource(i, x + PERS_DET_NO_COLS + 1) <> 4 Then Qualified = False
                 End If
             Next
             
