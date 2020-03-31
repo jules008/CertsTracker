@@ -17,16 +17,16 @@ Attribute VB_Exposed = True
 ' v1.0.4 - Show hide Cols
 ' v1.0.5 - Added global ranges
 ' v1.0.6 - Changed dev mode switch
-' v1.1.1 - Changed refresh to array
+' v1.1.2 - Changed refresh to array
 '---------------------------------------------------------------
-' Date - 25 Mar 20
+' Date - 31 Mar 20
 '===============================================================
 Option Explicit
 
 ' ===============================================================
 ' Constants
 ' --------------------------------------------------------------
-Private Const COL_WIDTHS As String = "20, 10, 20,10,10, 10, 10, 15, 10, 10"
+Private Const COL_WIDTHS As String = "20, 10, 20,10,15, 10, 10, 15, 10, 10"
 Private Const RNG_PERS_DET As String = "A4:J"
 Private Const RNG_WORKING_START As String = "L"
 Private Const RNG_WORKING_END As String = ":AX"
@@ -116,7 +116,7 @@ Public Sub RefreshQuals(Optional RowNo As Integer)
                         If Status = Active Then AryOutputQualArea(x, y) = 0
                         If Status = InActive Then AryOutputQualArea(x, y) = 6
                     End If
-                Case Is = blank
+                Case Is = Blank
                     AryOutputQualArea(x, y) = ""
             End Select
         Next y
