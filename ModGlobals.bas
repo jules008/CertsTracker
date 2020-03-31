@@ -6,12 +6,12 @@ Attribute VB_Name = "ModGlobals"
 ' v1.0.1 - Moved Range constants to sheets
 ' v1.0.2 - Added Enum Column headings
 '---------------------------------------------------------------
-' Date - 23 Mar 20
+' Date - 31 Mar 20
 '===============================================================
 Option Explicit
 
 Public Const VERSION As String = "1.3.0"
-Public Const ISS_DATE As String = "25 Mar 20"
+Public Const ISS_DATE As String = "31 Mar 20"
 Public Const RNG_SSN As String = "B2:B500"
 Public Const RNG_CREW_COUNT As String = "A:A"
 Public Const RNG_NAMES As String = "A:A"

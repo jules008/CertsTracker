@@ -34,6 +34,7 @@ Public Sub WhatsNewMsg()
     MsgBox " Updated to Version " & VERSION & " - What's New" _
                     & Chr(13) & "" _
                     & Chr(13) & " - Speeded up sheet calculations" _
+                    & Chr(13) & " - Corrected formatting of Admin columns" _
                     & Chr(13) & "", vbOKOnly + vbInformation, "New version"
 
 
