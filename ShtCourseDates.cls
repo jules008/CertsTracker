@@ -13,14 +13,14 @@ Attribute VB_Exposed = True
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Moved Write course dates into module
 ' v1.2.0 - Added function to return days to expiry
-' v1.2.1 - Changed to generic ranges
+' v1.2.2 - Changed to generic ranges
 '---------------------------------------------------------------
-' Date - 23 Mar 20
+' Date - 2 Apr 20
 '===============================================================
 Option Explicit
 
 Private Const RNG_COURSE_DATES As String = "B1:AO"
-
+Private Const NO_DET_COLS As Integer = 2            ' no of columns before quals for name and ssn etc
 ' ===============================================================
 ' LookUpCourseExp
 ' Checks the expiry date of the course if applicable.  Returns
@@ -44,7 +44,7 @@ Public Function LookUpCourseExp(SSN As String, Qual As EnumQual) As String
     End If
     
     ResRowNo = RngResult.Row
-    ResColNo = Qual + 2
+    ResColNo = Qual + NO_DET_COLS
     
     QualDate = Me.Cells(ResRowNo, ResColNo)
     
@@ -83,7 +83,7 @@ Public Function LookUpCourseDate(SSN As String, Qual As EnumQual, ReadWrite As E
     ResRowNo = RngResult.Row
     
     'get col no from qual
-    ResColNo = Qual + 2
+    ResColNo = Qual + NO_DET_COLS
     
     Select Case ReadWrite
         Case Is = eRead

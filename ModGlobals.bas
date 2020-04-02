@@ -5,8 +5,9 @@ Attribute VB_Name = "ModGlobals"
 ' v1.0.0 - Initial Version
 ' v1.0.1 - Moved Range constants to sheets
 ' v1.0.2 - Added Enum Column headings
+' v1.0.3 - Bug fixes
 '---------------------------------------------------------------
-' Date - 31 Mar 20
+' Date - 2 Apr 20
 '===============================================================
 Option Explicit
 
@@ -51,7 +52,7 @@ Enum EnumRole
     FireChief
 End Enum
 
-Enum EnumQual
+Enum EnumQual       'update lookup below
     CPR = 1
     PPEProgram
     EMR
@@ -69,7 +70,7 @@ Enum EnumQual
     DrvrOPMWS
     HazmatTech
     FireOfficerI
-    FireInpsectorI
+    FireInspectorI
     FireInstructorI
     IncidentSafetyOfficer
     FireOfficerII
@@ -134,6 +135,8 @@ Public Function QualConvEnum(Qual As EnumQual) As String
     Select Case Qual
         Case CPR
             QualConvEnum = "CPR"
+        Case PPEProgram
+            QualConvEnum = "PPE Program"
         Case EMR
             QualConvEnum = "EMR"
         Case Munitions
@@ -164,8 +167,8 @@ Public Function QualConvEnum(Qual As EnumQual) As String
             QualConvEnum = "Hazmat Tech"
         Case FireOfficerI
             QualConvEnum = "Fire Officer I"
-        Case FireInpsectorI
-            QualConvEnum = "Fire Inpsector I"
+        Case FireInspectorI
+            QualConvEnum = "Fire Inspector I"
         Case FireInstructorI
             QualConvEnum = "Fire Instructor I"
         Case IncidentSafetyOfficer
@@ -173,7 +176,7 @@ Public Function QualConvEnum(Qual As EnumQual) As String
         Case FireOfficerII
             QualConvEnum = "Fire Officer II"
         Case FireInspectorII
-            QualConvEnum = "Fire Inpsector II"
+            QualConvEnum = "Fire Inspector II"
         Case FireInstructorII
             QualConvEnum = "Fire Instructor II"
         Case HazmatIC
@@ -183,7 +186,7 @@ Public Function QualConvEnum(Qual As EnumQual) As String
         Case FireOfficerIII
             QualConvEnum = "Fire Officer III"
         Case FireInspectorIII
-            QualConvEnum = "Fire Inpsector III"
+            QualConvEnum = "Fire Inspector III"
         Case FireInstructorIII
             QualConvEnum = "Fire Instructor III"
         Case FireOfficerIV

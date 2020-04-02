@@ -18,8 +18,9 @@ Attribute VB_Exposed = True
 ' v1.0.5 - Added global ranges
 ' v1.0.6 - Changed dev mode switch
 ' v1.1.2 - Changed refresh to array
+' v1.1.3 - generic range changes and remove single line refresh
 '---------------------------------------------------------------
-' Date - 31 Mar 20
+' Date - 2 Apr 20
 '===============================================================
 Option Explicit
 
@@ -27,6 +28,7 @@ Option Explicit
 ' Constants
 ' --------------------------------------------------------------
 Private Const COL_WIDTHS As String = "20, 10, 20,10,15, 10, 10, 15, 10, 10"
+Private Const NO_HEADERS As Integer = 3             'no of rows above data
 Private Const RNG_PERS_DET As String = "A4:J"
 Private Const RNG_WORKING_START As String = "L"
 Private Const RNG_WORKING_END As String = ":AX"
@@ -38,10 +40,9 @@ Private Const RNG_ACTIVE As String = "J1:J1000"
 
 ' ===============================================================
 ' RefreshQuals
-' Refreshes all qulaification data.  If Row No is specified, only
-' refreshes that line.
+' Refreshes all qulaification data.
 ' ---------------------------------------------------------------
-Public Sub RefreshQuals(Optional RowNo As Integer)
+Public Sub RefreshQuals()
     Dim RngCell As Range
     Dim AryRoleQualArea() As Variant
     Dim RngRoleQualArea As Range
@@ -60,29 +61,23 @@ Public Sub RefreshQuals(Optional RowNo As Integer)
     On Error GoTo ErrorHandler
     
     NoCrew = ModMain.NoRows
-    If NoCrew = 0 Then Exit Sub
-    ReDim AryOutputQualArea(1 To NoRows, 1 To NO_COURSES)
     
     If NoCrew = 0 Then Exit Sub
     ReDim AryOutputQualArea(1 To NoCrew, 1 To NO_COURSES)
     
-    If RowNo <> 0 Then
-        Set RngRoleQualArea = Me.Range(RNG_WORKING_START & RowNo & RNG_WORKING_END & RowNo)
-    Else
-        Set RngRoleQualArea = Me.Range(RNG_WORKING & NoCrew + 3)
-    End If
+    Set RngRoleQualArea = Me.Range(RNG_WORKING & NoCrew + NO_HEADERS)
     
     AryRoleQualArea = RngRoleQualArea
 
-   ModMain.PerfSettingsOn
+    ModMain.PerfSettingsOn
     
     For x = LBound(AryRoleQualArea, 1) To UBound(AryRoleQualArea, 1)
         For y = LBound(AryRoleQualArea, 2) To UBound(AryRoleQualArea, 2)
         
-            Role = GetRole(x + 3)
+            Role = GetRole(x + NO_HEADERS)
             Qual = GetQual(y + PERS_DET_NO_COLS + 1)
-            SSN = GetSSN(x + 3)
-            Status = GetStatus(x + 3)
+            SSN = GetSSN(x + NO_HEADERS)
+            Status = GetStatus(x + NO_HEADERS)
             CourseDate = ShtCourseDates.LookUpCourseDate(SSN, Qual, eRead)
             RequiredYN = ShtRoleLU.LookUpQual(Role, Qual)
             QualStatus = ShtRoleLU.RetQualStatus(CourseDate, Qual)
@@ -297,12 +292,12 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
     
     If USER_LEVEL = BasicLvl Then Exit Sub
     
-    If Not Intersect(Target, Me.Range(RNG_WORKING & CrewCnt + 3)) Is Nothing Then
+    If Not Intersect(Target, Me.Range(RNG_WORKING & CrewCnt + NO_HEADERS)) Is Nothing Then
         
         Debug.Print "FrmEnterDate.ShowForm", SSN, Qual
         FrmEnterDate.ShowForm SSN, Qual
 
-        Me.RefreshQuals Target.Row
+        Me.RefreshQuals
     End If
     Target.Offset(1, 0).Select
 End Sub
@@ -317,12 +312,12 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     
     If Target.Count > 1 Then Exit Sub
     
-    If Not Intersect(Target, Me.Range(RNG_PERSON_DET_START & "3:" & RNG_PERSON_DET_END & NoRows + 3)) Is Nothing Then
-        Me.RefreshQuals Target.Row
+    If Not Intersect(Target, Me.Range(RNG_PERSON_DET_START & NO_HEADERS & ":" & RNG_PERSON_DET_END & NoRows + NO_HEADERS)) Is Nothing Then
+        Me.RefreshQuals
     End If
     
     If Not Intersect(Target, Me.Range(RNG_ACTIVE)) Is Nothing Then
-        Me.RefreshQuals Target.Row
+        Me.RefreshQuals
     End If
     
 End Sub
@@ -366,7 +361,7 @@ Public Sub SortBy(Field As Integer)
     
     On Error GoTo ErrorHandler
     
-    Set RngSort = Range("A4:AS" & ModMain.NoRows + 3)
+    Set RngSort = Range("A4:AS" & ModMain.NoRows + NO_HEADERS)
     Set RngIndex = Range("A4")
     
     Me.Unprotect SEC_KEY
@@ -398,7 +393,7 @@ Private Sub ShowHide()
     
     On Error GoTo ErrorHandler
     
-    Set RngShowHide = Range("A3:AS" & ModMain.NoRows + 3)
+    Set RngShowHide = Range("A" & NO_HEADERS & ":AS" & ModMain.NoRows + NO_HEADERS)
     
     Me.Unprotect SEC_KEY
     
@@ -429,7 +424,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Function GetDataAll() As Variant()
     Dim AryDataAll() As Variant
-    AryDataAll = Range(RNG_DATA_ALL & GetCrewCountAll + 3)
+    AryDataAll = Range(RNG_DATA_ALL & GetCrewCountAll + NO_HEADERS)
     GetDataAll = AryDataAll
 End Function
 
@@ -439,7 +434,7 @@ End Function
 ' ---------------------------------------------------------------
 Public Function GetPersDetails() As Variant()
     Dim AryPersDet As Variant
-    AryPersDet = Range(RNG_PERS_DET & GetCrewCountAll + 3)
+    AryPersDet = Range(RNG_PERS_DET & GetCrewCountAll + NO_HEADERS)
     GetPersDetails = AryPersDet
 End Function
 
@@ -448,7 +443,7 @@ End Function
 ' clears all personal details from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearPersDetails()
-    Range(RNG_PERS_DET & GetCrewCountAll + 3).ClearContents
+    Range(RNG_PERS_DET & GetCrewCountAll + NO_HEADERS).ClearContents
 End Sub
 
 ' ===============================================================
@@ -509,7 +504,7 @@ Public Function WritePersDetails(ByRef AryPersDetails() As Variant) As Boolean
     
     ClearPersDetails
     
-    Range(RNG_PERS_DET & UBound(AryPersDetails) + 3) = AryPersDetails
+    Range(RNG_PERS_DET & UBound(AryPersDetails) + NO_HEADERS) = AryPersDetails
     
     If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
        
