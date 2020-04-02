@@ -114,7 +114,7 @@ Private Function GetControlName(ByRef Course As EnumQual) As String
             GetControlName = "TxtDates15"
         Case FireOfficerI
             GetControlName = "TxtDates16"
-        Case FireInpsectorI
+        Case FireInspectorI
             GetControlName = "TxtDates17"
         Case FireInstructorI
             GetControlName = "TxtDates18"

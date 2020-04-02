@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmEnterDate
    ClientHeight    =   3345
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   5415
+   ClientWidth     =   6585
    OleObjectBlob   =   "FrmEnterDate.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,8 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 
 '===============================================================
 ' Module FrmEnterDate
@@ -28,6 +26,10 @@ Option Explicit
 Private SSN As String
 Private Qual As EnumQual
 
+' ===============================================================
+' ShowForm
+' activates form and updates textboxes
+' ---------------------------------------------------------------
 Public Sub ShowForm(LocSSN As String, LocQual As EnumQual)
     SSN = LocSSN
     Qual = LocQual
@@ -39,6 +41,10 @@ Public Sub ShowForm(LocSSN As String, LocQual As EnumQual)
     Show
 End Sub
 
+' ===============================================================
+' BtnClearDate_Click
+' Resets the date to ""
+' ---------------------------------------------------------------
 Private Sub BtnClearDate_Click()
     If Selection.Cells.Count > 1 Then Exit Sub
     
@@ -46,10 +52,17 @@ Private Sub BtnClearDate_Click()
     Unload Me
 End Sub
 
+' ===============================================================
+' BtnClose_Click
+' ---------------------------------------------------------------
 Private Sub BtnClose_Click()
     Unload Me
 End Sub
 
+' ===============================================================
+' BtnOK_Click
+' if EMT qualified, enters EMT in EMR field then closes form
+' ---------------------------------------------------------------
 Private Sub BtnOK_Click()
     Dim CourseDate As String
     
@@ -66,3 +79,4 @@ Private Sub BtnOK_Click()
     
     Unload Me
 End Sub
+
