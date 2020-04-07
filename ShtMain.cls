@@ -19,8 +19,9 @@ Attribute VB_Exposed = True
 ' v1.0.6 - Changed dev mode switch
 ' v1.1.2 - Changed refresh to array
 ' v1.1.3 - generic range changes and remove single line refresh
+' v1.2.0 - Added function to return qual status
 '---------------------------------------------------------------
-' Date - 2 Apr 20
+' Date - 7 Apr 20
 '===============================================================
 Option Explicit
 
@@ -30,6 +31,7 @@ Option Explicit
 Private Const COL_WIDTHS As String = "20, 10, 20,10,15, 10, 10, 15, 10, 10"
 Private Const NO_HEADERS As Integer = 3             'no of rows above data
 Private Const RNG_PERS_DET As String = "A4:J"
+Private Const NO_PERS_DET_COLS = 11
 Private Const RNG_WORKING_START As String = "L"
 Private Const RNG_WORKING_END As String = ":AX"
 Private Const RNG_WORKING As String = "L4:AX"
@@ -450,7 +452,7 @@ End Sub
 ' ReadColStatus
 ' Returns whether the specified column is hidden
 ' ---------------------------------------------------------------
-Public Function ReadColStatus(Col As EnumCols) As Boolean
+Public Function ReadColStatus(Col As EnumColsMain) As Boolean
     ReadColStatus = Not Me.Columns(Col).EntireColumn.Hidden
 End Function
 
@@ -458,7 +460,7 @@ End Function
 ' SetColStatus
 ' hides or shows specified column
 ' ---------------------------------------------------------------
-Public Sub SetColStatus(Col As EnumCols, Show As Boolean)
+Public Sub SetColStatus(Col As EnumColsMain, Show As Boolean)
     Dim i As Integer
     Dim ColWidths() As String
     
@@ -530,3 +532,30 @@ Public Sub SecureCols()
     SetControlPos "CmdSort", 102, 330, 18, 33
 
 End Sub
+
+' ===============================================================
+' GetQualStatus
+' looks up the selected qualification status for the SSN provided
+' ---------------------------------------------------------------
+Public Function GetQualStatus(SSN As String, Qual As EnumQual) As Integer
+    Dim RngSSN As Range
+    Dim RngResult As Range
+    Dim ResRowNo As Integer
+    Dim ResColNo As Integer
+    
+    Set RngSSN = Me.Columns(eSSN)
+    Set RngResult = RngSSN.Find(SSN, , xlValues, xlWhole, xlByRows, xlNext)
+    
+    If RngResult Is Nothing Then Exit Function
+    ResRowNo = RngResult.Row
+    
+    'get col no from qual
+    ResColNo = Qual + NO_PERS_DET_COLS
+    
+    GetQualStatus = Me.Cells(ResRowNo, ResColNo)
+    
+    Set RngResult = Nothing
+    Set RngSSN = Nothing
+End Function
+
+

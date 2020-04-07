@@ -5,11 +5,17 @@ Attribute VB_Name = "ModReports"
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Improved Reporting
 ' v1.1.1 - added global ranges
+' v1.2.0 - Required Qualification report
 '---------------------------------------------------------------
-' Date - 25 Mar 20
+' Date - 7 Apr 20
 '===============================================================
 Option Explicit
 
+'===============================================================
+' PromReports
+' Reports on all members that are qualified for promotion to the
+' next rank
+'---------------------------------------------------------------
 Public Sub PromReports(Report As EnumReport)
     Dim AryQuals() As Variant
     Dim AryReport(1 To 50, 1 To 5) As Variant
@@ -91,6 +97,77 @@ Public Sub PromReports(Report As EnumReport)
     End If
 End Sub
 
+'===============================================================
+' ReqQualReport
+' Reports on members that require the selected qualification
+'---------------------------------------------------------------
+Public Sub ReqQualReport(SelWatch As String, Qual As EnumQual)
+    Dim AryQuals() As Variant
+    Dim AryReport(1 To 500, 1 To 5) As Variant
+    Dim ArySource As Variant
+    Dim SSN As String
+    Dim Name As String
+    Dim Status As String
+    Dim Position As String
+    Dim Grade As String
+    Dim QStatus As Integer
+    Dim QDate As String
+    Dim Watch As String
+    Dim DaysToExp As Integer
+    Dim Headings(0 To 5) As String
+    Dim Title As String
+    Dim i As Integer
+    Dim x As Integer
+    Dim y As Integer
+       
+    ArySource = ShtMain.GetDataAll
+    
+    For i = LBound(ArySource) To UBound(ArySource)
+        SSN = ArySource(i, eSSN)
+        Name = ArySource(i, eName)
+        Watch = ArySource(i, eWatch)
+        Status = ArySource(i, eStatus)
+        Position = ArySource(i, ePosition)
+        Grade = ArySource(i, eGrade)
+        
+        Debug.Print SSN, Name, Watch, Status
+        
+        If Status = "Active" And _
+            (Watch = SelWatch Or _
+            SelWatch = "All") Then
+
+            QStatus = ShtMain.GetQualStatus(SSN, Qual)
+            
+            If QStatus = 3 Then
+                y = y + 1
+                AryReport(y, 1) = Name
+                AryReport(y, 2) = Grade
+                AryReport(y, 3) = Position
+                AryReport(y, 4) = Watch
+                AryReport(y, 5) = QualConvEnum(Qual)
+            End If
+        End If
+    Next
+    
+    If y > 0 Then
+        Headings(0) = "Name"
+        Headings(1) = "Grade"
+        Headings(2) = "Position"
+        Headings(3) = "Watch"
+        Headings(4) = "Req Qual"
+        
+        Title = "Personnel Requiring " & QualConvEnum(Qual) & " Certification"
+        
+        ShtReport.PrintReport AryReport, Title, Headings
+    Else
+        MsgBox "There were no results for the report", vbInformation + vbOKOnly
+    End If
+End Sub
+
+'===============================================================
+' ExpQualReport
+' Reports on expired qualifications
+'---------------------------------------------------------------
 Public Sub ExpQualReport(SelWatch As String, Period As Integer)
     Dim AryQuals() As Variant
     Dim AryReport(1 To 500, 1 To 5) As Variant
@@ -109,7 +186,7 @@ Public Sub ExpQualReport(SelWatch As String, Period As Integer)
     Dim y As Integer
        
     ArySource = ShtMain.GetDataAll
-    y = 1
+    y = 0
     
     For i = LBound(ArySource) To UBound(ArySource)
         SSN = ArySource(i, eSSN)
@@ -128,12 +205,12 @@ Public Sub ExpQualReport(SelWatch As String, Period As Integer)
                 QDate = ShtCourseDates.LookUpCourseDate(SSN, Qual, eRead)
                 DaysToExp = ShtCourseDates.LookUpCourseExp(SSN, Qual)
                 If DaysToExp < Period Then
+                    y = y + 1
                     AryReport(y, 1) = Name
                     AryReport(y, 2) = Watch
                     AryReport(y, 3) = QualConvEnum(Qual)
                     AryReport(y, 4) = QDate
                     AryReport(y, 5) = DaysToExp
-                    y = y + 1
                 End If
             Next
         End If
@@ -161,5 +238,4 @@ Public Sub ExpQualReport(SelWatch As String, Period As Integer)
         MsgBox "There were no results for the report", vbInformation + vbOKOnly
     End If
 End Sub
-
 
