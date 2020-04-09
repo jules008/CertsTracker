@@ -33,6 +33,7 @@ Public Sub WhatsNewMsg()
         
     MsgBox " Updated to Version " & VERSION & " - What's New" _
                     & Chr(13) & " - New report of members requiring a selected certification" _
+                    & Chr(13) & " - Fixed locked admin columns bug" _
                     & Chr(13) & "", vbOKOnly + vbInformation, "New version"
 
 
