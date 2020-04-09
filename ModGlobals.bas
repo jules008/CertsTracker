@@ -11,8 +11,8 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 Option Explicit
 
-Public Const VERSION As String = "1.3.1"
-Public Const ISS_DATE As String = "07 Apr 20"
+Public Const VERSION As String = "1.3.2"
+Public Const ISS_DATE As String = "09 Apr 20"
 Public Const RNG_SSN As String = "B2:B500"
 Public Const RNG_CREW_COUNT As String = "A:A"
 Public Const RNG_NAMES As String = "A:A"

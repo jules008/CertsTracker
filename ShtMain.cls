@@ -20,8 +20,9 @@ Attribute VB_Exposed = True
 ' v1.1.2 - Changed refresh to array
 ' v1.1.3 - generic range changes and remove single line refresh
 ' v1.2.0 - Added function to return qual status
+' v1.2.1 - Fixed Admin col lock bug
 '---------------------------------------------------------------
-' Date - 7 Apr 20
+' Date - 9 Apr 20
 '===============================================================
 Option Explicit
 
@@ -469,6 +470,7 @@ Public Sub SetColStatus(Col As EnumColsMain, Show As Boolean)
     If Show Then
         Me.Columns(Col).EntireColumn.Hidden = False
         Me.Columns(Col).ColumnWidth = ColWidths(Col - 1)
+        Me.Columns(Col).Locked = False
     Else
         Me.Columns(Col).EntireColumn.Hidden = True
     End If
