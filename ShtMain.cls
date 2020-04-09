@@ -21,6 +21,7 @@ Attribute VB_Exposed = True
 ' v1.1.3 - generic range changes and remove single line refresh
 ' v1.2.0 - Added function to return qual status
 ' v1.2.1 - Fixed Admin col lock bug
+' v1.2.2 - Fixed Sorting issues
 '---------------------------------------------------------------
 ' Date - 9 Apr 20
 '===============================================================
@@ -271,14 +272,31 @@ End Sub
 ' CmdSort_Click
 ' ---------------------------------------------------------------
 Private Sub CmdSort_Click()
-    SortBy CmoSortby.ListIndex
+    
+    If USER_LEVEL = BasicLvl And ListIndex <> eDoB Then
+        SortBy CmoSortBy.ListIndex + 1
+    Else
+        SortBy CmoSortBy.ListIndex + 1
+    End If
+End Sub
+
+Private Sub CmoSortBy_Change()
+
 End Sub
 
 ' ===============================================================
 ' Worksheet_Activate
 ' ---------------------------------------------------------------
 Private Sub Worksheet_Activate()
+    Dim i As Integer
     PerfSettingsOff
+    
+    With CmoSortBy
+        .Clear
+        For i = 1 To ShtLists.Range("LU_SORTBY").Cells.Count - 1
+            .AddItem ShtLists.Range("LU_SORTBY").Cells(i)
+        Next
+    End With
 End Sub
 
 ' ===============================================================
@@ -358,19 +376,20 @@ End Function
 ' SortBy
 ' sorts personal details by submitted field
 ' ---------------------------------------------------------------
-Public Sub SortBy(Field As Integer)
+Public Sub SortBy(Field As EnumColsMain)
     Dim RngSort As Range
     Dim RngIndex As Range
     
     On Error GoTo ErrorHandler
     
-    Set RngSort = Range("A4:AS" & ModMain.NoRows + NO_HEADERS)
-    Set RngIndex = Range("A4")
+    Set RngSort = Me.Range(RNG_DATA_ALL & ModMain.NoRows + NO_HEADERS)
+    Set RngIndex = Me.Columns(Field)
     
+    
+    ShowHide
     Me.Unprotect SEC_KEY
-
-    RngSort.Sort RngIndex.Offset(0, Field)
-    
+    RngSort.Sort Columns(eStatus), , RngIndex
+    ShowHide
     If USER_LEVEL <> DevLvl Then Me.Protect SEC_KEY
     
     Set RngSort = Nothing
