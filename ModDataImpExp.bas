@@ -5,8 +5,9 @@ Attribute VB_Name = "ModDataImpExp"
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added Trend data archive
 ' v1.1.1 - Added global ranges
+' v1.2.1 - export role data for backup
 '---------------------------------------------------------------
-' Date - 23 Mar 20
+' Date - 14 Apr 20
 '===============================================================
 Option Explicit
 
@@ -28,13 +29,13 @@ Private Function ExportPersDet(FilePath As String) As Boolean
     
     Set FSO = CreateObject("Scripting.FileSystemObject")
     
-    Set ExpFile = FSO.CreateTextFile(FilePath & "\UserDetails.txt", True)
+    Set ExpFile = FSO.CreateTextFile(FilePath & "\UserDetails " & Format(Now(), "yy-mm-dd") & ".txt", True)
     
     AryPersDet = ShtMain.GetPersDetails
     
     For rw = LBound(AryPersDet) To UBound(AryPersDet)
         TxtLine = ""
-        For Cl = 1 To PERS_DET_NO_COLS
+        For Cl = LBound(AryPersDet, 2) To UBound(AryPersDet, 2)
             TxtLine = TxtLine & AryPersDet(rw, Cl) & ";"
         Next
         ExpFile.WriteLine (TxtLine)
@@ -71,11 +72,11 @@ Private Function ExportCourseDates(FilePath As String) As Boolean
     AryDates = ShtCourseDates.GetAllData
     
     Set FSO = CreateObject("Scripting.FileSystemObject")
-    Set ExpFile = FSO.CreateTextFile(FilePath & "\CourseDates.txt", True)
+    Set ExpFile = FSO.CreateTextFile(FilePath & "\CourseDates " & Format(Now(), "yy-mm-dd") & ".txt", True)
     
     For rw = LBound(AryDates) To UBound(AryDates)
         TxtLine = ""
-        For Cl = 1 To NO_COURSES + 1
+        For Cl = LBound(AryDates, 2) To UBound(AryDates, 2)
             TxtLine = TxtLine & AryDates(rw, Cl) & ";"
         Next
         ExpFile.WriteLine (TxtLine)
@@ -105,6 +106,7 @@ Public Sub ExportData()
     Dim ErrFlag1 As Boolean
     Dim ErrFlag2 As Boolean
     Dim ErrFlag3 As Boolean
+    Dim ErrFlag4 As Boolean
     
     On Error GoTo ErrorHandler
     
@@ -121,8 +123,9 @@ Public Sub ExportData()
     ErrFlag1 = ModDataImpExp.ExportCourseDates(FilePath)
     ErrFlag2 = ModDataImpExp.ExportPersDet(FilePath)
     ErrFlag3 = ModDataImpExp.ExportTrendData(FilePath)
+    ErrFlag4 = ModDataImpExp.ExportRoleData(FilePath)
     
-    If ErrFlag1 Or ErrFlag2 Or ErrFlag3 Then GoTo ErrorHandler
+    If ErrFlag1 Or ErrFlag2 Or ErrFlag3 Or ErrFlag4 Then GoTo ErrorHandler
     
     MsgBox "Export Complete", vbOKOnly + vbInformation, "Data Export"
     
@@ -150,11 +153,11 @@ Public Sub ClearAllData()
         ShtMain.Unprotect SEC_KEY
         ShtCourseDates.Unprotect SEC_KEY
         ShtDashboard.Unprotect SEC_KEY
-        
         ShtMain.AutoFilterMode = False
         ShtMain.CmdShowHide.Caption = "Hide Leavers"
         ShtMain.ClearPersDetails
         ShtCourseDates.ClearAllData
+        ShtRoleLU.ClearAllData
         
         If USER_LEVEL <> DevLvl Then ShtMain.Protect SEC_KEY
         If USER_LEVEL <> DevLvl Then ShtCourseDates.Protect SEC_KEY
@@ -173,6 +176,7 @@ Public Sub ImportData()
     Dim ErrFlag1 As Boolean
     Dim ErrFlag2 As Boolean
     Dim ErrFlag3 As Boolean
+    Dim ErrFlag4 As Boolean
     
     On Error GoTo ErrorHandler
     
@@ -191,8 +195,9 @@ Public Sub ImportData()
     ErrFlag1 = ImportPersData(FilePath)
     ErrFlag2 = ImportCourseDates(FilePath)
     ErrFlag3 = ImportTrendData(FilePath)
+    ErrFlag4 = ImportRoleData(FilePath)
     
-    If ErrFlag1 Or ErrFlag2 Or ErrFlag3 Then GoTo ErrorHandler
+    If ErrFlag1 Or ErrFlag2 Or ErrFlag3 Or ErrFlag4 Then GoTo ErrorHandler
     
     MsgBox "Import Complete", vbOKOnly + vbInformation, "Data Export"
     
@@ -319,13 +324,13 @@ Private Function ExportTrendData(FilePath As String) As Boolean
     
     Set FSO = CreateObject("Scripting.FileSystemObject")
     
-    Set ExpFile = FSO.CreateTextFile(FilePath & "\TrendData.txt", True)
+    Set ExpFile = FSO.CreateTextFile(FilePath & "\TrendData " & Format(Now(), "yy-mm-dd") & ".txt", True)
     
     AryTrendData = ShtDashboard.GetTrendData
     
     For rw = LBound(AryTrendData) To UBound(AryTrendData)
         TxtLine = ""
-        For Cl = 1 To 5
+        For Cl = LBound(AryTrendData, 2) To UBound(AryTrendData, 2)
             TxtLine = TxtLine & AryTrendData(rw, Cl) & ";"
         Next
         ExpFile.WriteLine (TxtLine)
@@ -368,5 +373,72 @@ Exit Function
 
 ErrorHandler:
     ImportTrendData = True
+End Function
+
+' ===============================================================
+' ExportRoleData
+' Exports Role Look Up data to a text file and saves at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Private Function ExportRoleData(FilePath As String) As Boolean
+
+    Dim AryRoleData() As Variant
+    Dim CrewCount As Integer
+    Dim rw As Integer
+    Dim Cl As Integer
+    Dim TxtLine As String
+    Dim ExpFile As TextStream
+    
+    On Error GoTo ErrorHandler
+    
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    
+    Set ExpFile = FSO.CreateTextFile(FilePath & "\RoleData " & Format(Now(), "yy-mm-dd") & ".txt", True)
+    
+    AryRoleData = ShtRoleLU.GetRoleData
+    
+    For rw = LBound(AryRoleData, 1) To UBound(AryRoleData, 1)
+        TxtLine = ""
+        For Cl = LBound(AryRoleData, 2) To UBound(AryRoleData, 2)
+            TxtLine = TxtLine & AryRoleData(rw, Cl) & ";"
+        Next
+        ExpFile.WriteLine (TxtLine)
+    Next
+    ExpFile.Close
+    
+    ExportRoleData = False
+    
+    Set ExpFile = Nothing
+    Set FSO = Nothing
+Exit Function
+
+ErrorHandler:
+    ExportRoleData = True
+End Function
+
+' ===============================================================
+' ImportRoleData
+' Imports Role Data from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Private Function ImportRoleData(FilePath) As Boolean
+    Dim AryImport() As Variant
+    Dim FullFilePath As String
+    Dim TotalLines As Integer
+    
+    On Error GoTo ErrorHandler
+    
+    FullFilePath = FilePath & "\RoleData.txt"
+    
+    AryImport = DelimitedTextFileToArray(FullFilePath)
+    TotalLines = UBound(AryImport)
+    
+    ShtRoleLU.WriteRoleData AryImport
+    
+    ImportRoleData = False
+Exit Function
+
+ErrorHandler:
+    ImportRoleData = True
 End Function
 

@@ -13,12 +13,15 @@ Attribute VB_Exposed = True
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added Days to expiry function
 ' v1.1.1 - Added global ranges
+' v1.2.0 - Send Role data for backup
 '---------------------------------------------------------------
-' Date - 23 Mar 20
+' Date - 14 Apr 20
 '===============================================================
 Option Explicit
 
 Private Const RNG_QUALS = "B2:AN2"
+Private Const RNG_DATA = "B3:AN21"
+Private Const RNG_INDEX = "B3"
 '===============================================================
 ' LookUpQual
 ' Checks to see whether a particular qualification is required for a role
@@ -101,11 +104,41 @@ Public Function GetRoleEligibility(Role As EnumRole) As Variant()
     GetRoleEligibility = Range(RNG_QUALS).Offset(Role, 0)
 End Function
 
+'===============================================================
+' GetRoleData
+' Returns all role look up data for import and export
+'---------------------------------------------------------------
+Public Function GetRoleData() As Variant()
+    Dim AryRoleData As Variant
+    
+    AryRoleData = Range(RNG_DATA)
+    GetRoleData = AryRoleData
+End Function
 
+' ===============================================================
+' WriteRoleData
+' writes Role data from a text file stored at the location
+' specified.  Returns TRUE if an error occurs.
+' ---------------------------------------------------------------
+Public Function WriteRoleData(ByRef AryRoleDates() As Variant) As Boolean
+        
+    On Error GoTo ErrorHandler
+    
+    Range(RNG_INDEX) = "1"
+    Me.Activate
+    Range(RNG_INDEX).Resize(UBound(AryRoleDates, 1), UBound(AryRoleDates, 2)) = AryRoleDates
+       
+    WriteRoleData = False
+Exit Function
 
+ErrorHandler:
+    WriteRoleData = True
+End Function
 
-
-
-
-
-
+' ===============================================================
+' ClearAllData
+' Clears all data from form.
+' ---------------------------------------------------------------
+Public Sub ClearAllData()
+    Range(RNG_DATA).ClearContents
+End Sub
