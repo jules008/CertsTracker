@@ -23,7 +23,7 @@ Attribute VB_Exposed = True
 ' v1.2.1 - Fixed Admin col lock bug
 ' v1.2.2 - Fixed Sorting issues
 '---------------------------------------------------------------
-' Date - 9 Apr 20
+' Date - 14 Apr 20
 '===============================================================
 Option Explicit
 
@@ -273,8 +273,8 @@ End Sub
 ' ---------------------------------------------------------------
 Private Sub CmdSort_Click()
     
-    If USER_LEVEL = BasicLvl And ListIndex <> eDoB Then
-        SortBy CmoSortBy.ListIndex + 1
+    If USER_LEVEL = BasicLvl And CmoSortBy.ListIndex = eDoB - 1 Then
+        SortBy eName
     Else
         SortBy CmoSortBy.ListIndex + 1
     End If
