@@ -78,7 +78,7 @@ End Function
 ' Takes a date and returns how many days till expiry.  If not
 ' applicable, returns 999
 '---------------------------------------------------------------
-Public Function DaysTillExpiry(QualDate As Variant, Qual As EnumQual) As Integer
+Public Function DaysTillExpiry(QualDate As Variant, Qual As EnumQual) As single
     Dim QualDur As Integer
     Dim QDate As Date
     

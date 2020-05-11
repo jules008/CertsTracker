@@ -113,7 +113,7 @@ Public Sub ReqQualReport(SelWatch As String, Qual As EnumQual)
     Dim QStatus As Integer
     Dim QDate As String
     Dim Watch As String
-    Dim DaysToExp As Integer
+    Dim DaysToExp As Single
     Dim Headings(0 To 5) As String
     Dim Title As String
     Dim i As Integer
