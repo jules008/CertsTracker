@@ -18,7 +18,7 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 19 Mar 20
+' Date - 21 Mar 20
 '===============================================================
 Option Explicit
 
@@ -52,7 +52,7 @@ Private Sub ShowHideCols()
         .SetControlPos "CmoSortBy", 102, 252, 19, 80
         .SetControlPos "CmdSort", 102, 330, 18, 33
         
-        .Protect SEC_KEY
+        If USER_LEVEL <> DevLvl Then .Protect SEC_KEY
     End With
 End Sub
 

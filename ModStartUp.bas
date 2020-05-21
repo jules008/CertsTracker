@@ -9,7 +9,7 @@ Attribute VB_Name = "ModStartUp"
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added What's new Message
 '---------------------------------------------------------------
-' Date - 14 Apr 20
+' Date - 21 Mar 20
 '===============================================================
 Option Explicit
 
@@ -22,6 +22,7 @@ Public Sub InitialiseSystem(Prompt As Boolean)
     ModSecurity.DetectUser Prompt
     If ShtUsers.UpdateUserAccess Then WhatsNewMsg
     ShtMain.RefreshQuals
+    ModDataImpExp.BackUpData
     PerfSettingsOff
 End Sub
 

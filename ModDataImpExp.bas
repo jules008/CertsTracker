@@ -7,7 +7,7 @@ Attribute VB_Name = "ModDataImpExp"
 ' v1.1.1 - Added global ranges
 ' v1.2.1 - export role data for backup
 '---------------------------------------------------------------
-' Date - 14 Apr 20
+' Date - 21 Mar 20
 '===============================================================
 Option Explicit
 
@@ -441,4 +441,26 @@ Exit Function
 ErrorHandler:
     ImportRoleData = True
 End Function
+
+' ===============================================================
+' BackUpData
+' backs up data every specified number of days
+' ---------------------------------------------------------------
+Public Sub BackUpData()
+    Dim BackUpDue As Date
+    
+    If USER_LEVEL <> DevLvl Then
+        
+        BackUpDue = DateAdd("d", BACKUP_FREQ, [BACK_UP_DATE])
+        If BackUpDue < Now Then
+            
+            ModDataImpExp.ExportCourseDates (BACKUP_PATH)
+            ModDataImpExp.ExportPersDet (BACKUP_PATH)
+            ModDataImpExp.ExportTrendData (BACKUP_PATH)
+            ModDataImpExp.ExportRoleData (BACKUP_PATH)
+            [BACK_UP_DATE] = Format(Now, "dd mmm yy")
+        End If
+    
+    End If
+End Sub
 

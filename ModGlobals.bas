@@ -7,7 +7,7 @@ Attribute VB_Name = "ModGlobals"
 ' v1.0.2 - Added Enum Column headings
 ' v1.0.3 - Bug fixes
 '---------------------------------------------------------------
-' Date - 7 Apr 20
+' Date - 21 Mar 20
 '===============================================================
 Option Explicit
 
@@ -18,11 +18,13 @@ Public Const RNG_CREW_COUNT As String = "A:A"
 Public Const RNG_NAMES As String = "A:A"
 Public Const RNG_LAST_COL As String = "AX"
 Public Const NO_COURSES As Integer = 39
+Public Const BACKUP_FREQ As Integer = 3
 Public Const PERS_DET_NO_COLS As Integer = 10
 Public Const SEC_KEY As String = "2683174"
 Public Const EXPORT_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
 Public Const LIBRARY_FILE_PATH As String = "G:\Development Areas\Certification Tracker\Library\"
 Public Const PROJECT_FILE_NAME As String = "Certification Tracker"
+Public Const BACKUP_PATH As String = "F:\6 Training\Personal Qualification & Certifications Tracker\Data Backups\"
 Public Const APP_NAME As String = "Certification Tracker"
 Public USER_LEVEL As EnumUserLvl
 

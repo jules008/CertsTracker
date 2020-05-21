@@ -23,7 +23,7 @@ Attribute VB_Exposed = True
 ' v1.2.1 - Fixed Admin col lock bug
 ' v1.2.2 - Fixed Sorting issues
 '---------------------------------------------------------------
-' Date - 14 Apr 20
+' Date - 21 Mar 20
 '===============================================================
 Option Explicit
 
@@ -211,7 +211,7 @@ Private Sub BtnAddNew_Click()
     Me.Cells(GetCrewCountAll + 4, eStatus).Select
     ShowHide
     ShowHide
-    Protect SEC_KEY
+    If USER_LEVEL <> DevLvl Then Protect SEC_KEY
     PerfSettingsOff
 End Sub
 
